@@ -1,5 +1,4 @@
 import React from "react";
-import logoF from "../assets/logo/18.png";
 import logoFull from "../assets/wfclogo1.png";
 
 const Footer = () => {
@@ -50,7 +49,7 @@ const Footer = () => {
                   About
                 </a>
                 <a
-                  href="#"
+                  href="/works"
                   className="text-sm text-white/60 hover:text-white transition-colors"
                 >
                   Portfolio

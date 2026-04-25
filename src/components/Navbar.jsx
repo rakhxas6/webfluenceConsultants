@@ -1,10 +1,8 @@
 import React from "react";
-import logo1 from "../assets/logo/17.png";
 import logo2 from "../assets/wfcNavbarf.png";
-import { useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
-  const navigate = useNavigate();
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Services", path: "#services" },
