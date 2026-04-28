@@ -1,20 +1,49 @@
 import React from "react";
 import logo2 from "../assets/wfcNavbarf.png";
-
+const { useNavigate, useLocation } = require("react-router-dom");
 
 const Navbar = () => {
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Services", path: "#services" },
-    { name: "Contact", path: "#contact" },
-    { name: "Works", path: "/works" },
-    { name: "About", path: "#about" },
-  ];
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
+  const navLinks = [
+    { name: "Home", path: "/", id: null },
+    { name: "Services", path: "/", id: "services" },
+    { name: "Work", path: "/work", id: null },
+    { name: "Contact", path: "/", id: "contact" },
+    { name: "About", path: "/", id: "about" },
+  ];
+
+  const handleNavClick = (e, link) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+
+    // No hash — just navigate directly
+    if (!link.id) {
+      navigate(link.path);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    // Already on home — just scroll
+    if (location.pathname === "/") {
+      const el = document.getElementById(link.id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+
+    // On another page — go home first, then scroll after mount
+    navigate("/");
+    setTimeout(() => {
+      const el = document.getElementById(link.id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   return (
-    <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 z-50 bg-white/80 shadow-md backdrop-blur-lg py-3 md:py-4">
+    <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 z-50 bg-white/60 shadow-md backdrop-blur-lg py-3 md:py-4">
       {/* Logo */}
       <a href="/" className="flex items-center gap-2">
         <img src={logo2} alt="Logo" className="w-auto h-16" />
@@ -25,7 +54,8 @@ const Navbar = () => {
         {navLinks.map((link, i) => (
           <a
             key={i}
-            href={link.path}
+            href={link.id ? `/#${link.id}` : link.path}
+            onClick={(e) => handleNavClick(e, link)}
             className="group flex flex-col gap-0.5 text-gray-700"
           >
             {link.name}
@@ -98,7 +128,11 @@ const Navbar = () => {
           </svg>
         </button>
         {navLinks.map((link, i) => (
-          <a key={i} href={link.path} onClick={() => setIsMenuOpen(false)}>
+          <a
+            key={i}
+            href={link.id ? `/#${link.id}` : link.path}
+            onClick={(e) => handleNavClick(e, link)}
+          >
             {link.name}
           </a>
         ))}
