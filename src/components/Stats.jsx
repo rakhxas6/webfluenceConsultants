@@ -61,7 +61,7 @@ export default function Stats() {
   }, []);
 
   return (
-    <section ref={ref} className="border-t border-b border-neutral-200 bg-white py-10 px-4">
+    <section ref={ref} className="bg-slate-100/70 border-t border-b border-neutral-200 py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[#ff751f]/90">
           {stats.map((stat, i) => (

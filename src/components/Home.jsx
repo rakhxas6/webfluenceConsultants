@@ -40,7 +40,7 @@ function WordCycler() {
 
   return (
     <>
-      <span className="block text-7xl text-[#ff751f] uppercase">We are a</span>
+      <span className="block text-5xl text-[#ff751f] tracking-wide uppercase leading-[1.05]">We are a</span>
       <span className="block" style={{ color }}>
         {displayed}
         <span style={{ color }}>.</span>
@@ -167,7 +167,7 @@ const Home = () => {
           </div>
 
           <div className="text-center">
-            <h1 className="text-6xl font-semibold tracking-tight sm:text-8xl leading-[1.05]">
+            <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl leading-[1.05]">
               <WordCycler />
             </h1>
 
@@ -176,10 +176,10 @@ const Home = () => {
             </p>
 
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a href="/learn" className="text-sm font-semibold px-4 py-2 bg-[#0025cc] text-white border border-[#0025cc] hover:bg-white hover:text-[#0025cc] transition-colors">
+              <a href="#cta" className="text-sm font-semibold px-4 py-2 bg-[#0025cc] text-white border border-[#0025cc] hover:bg-white hover:text-[#0025cc] transition-colors">
                 Get started
               </a>
-              <a href="/learn" className="text-sm font-semibold px-4 py-2 text-[#0025cc] border border-[#0025cc] hover:bg-[#0025cc] hover:text-white transition-colors">
+              <a href="#services" className="text-sm font-semibold px-4 py-2 text-[#0025cc] border border-[#0025cc] hover:bg-[#0025cc] hover:text-white transition-colors">
                 Learn more
               </a>
             </div>

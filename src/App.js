@@ -16,6 +16,7 @@ import Work from "./components/Works";
 import Error from "./components/Error";
 import Stats from "./components/Stats";
 import CTA from "./components/CTA";
+import ServiceDetail from "./components/services/ServiceDetail";
 
 
 const MainLayout = () => (
@@ -39,6 +40,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />} />
         <Route path="/work" element={<Work />} />
+        <Route path="/:serviceId" element={<ServiceDetail />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="*" element={<Error />} />

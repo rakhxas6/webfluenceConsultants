@@ -12,7 +12,7 @@ const Brands = () => {
   ];
 
   return (
-    <section className="py-16 px-4 border-t border-neutral-300">
+    <section className="py-16 bg-slate-100/70 px-4 border-t border-neutral-300">
       <style>{`
                 .marquee-inner {
                     animation: marqueeScroll linear infinite;

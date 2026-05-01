@@ -9,7 +9,7 @@ export default function CTA() {
                 }
             `}</style>
 
-      <section className="py-16 bg-slate-100/70 w-full text-center px-2">
+      <section className="py-16 bg-slate-100/70 w-full text-center px-4 scroll-mt-[25vh]" id="cta">
         <p className="text-xl font-medium text-slate-600">
           Let’s work together!
         </p>

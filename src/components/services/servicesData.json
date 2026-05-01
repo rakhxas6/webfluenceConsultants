@@ -1,0 +1,92 @@
+[
+  {
+    "id": "social-media-marketing",
+    "category": "Social Media Marketing",
+    "tagline": "Always-on presence. Real results.",
+    "description": "We handle posts, engagement, and growth so your social media presence delivers results 24/7.",
+    "stat1": { "value": "3×", "label": "avg. engagement lift" },
+    "stat2": { "value": "90-day", "label": "visible growth guarantee" },
+    "platforms": ["Instagram", "Facebook", "TikTok", "LinkedIn", "X (Twitter)"],
+    "sections": [
+      { "title": "Content strategy & calendar", "body": "We build a bespoke content calendar aligned to your brand voice, audience behaviour, and seasonal moments — so every post has a purpose." },
+      { "title": "Community management", "body": "Our team monitors comments, DMs, and mentions daily, turning passive followers into loyal advocates through real-time engagement." },
+      { "title": "Performance reporting", "body": "Monthly reports with clear KPIs: reach, engagement rate, follower growth, and link clicks — with plain-English commentary, not just numbers." },
+      { "title": "Paid social amplification", "body": "We run targeted boosted posts and dark ads to extend organic reach to cold audiences who match your ideal customer profile." }
+    ]
+  },
+  {
+    "id": "seo",
+    "category": "Search Engine Optimisation (SEO)",
+    "tagline": "Rank higher. Convert better.",
+    "description": "Local & national SEO solutions to increase organic traffic, leads, and brand authority.",
+    "stat1": { "value": "Top 3", "label": "target keyword positions" },
+    "stat2": { "value": "6-month", "label": "organic traffic growth" },
+    "platforms": ["Google", "Bing", "Google Maps / Local Pack", "YouTube SEO"],
+    "sections": [
+      { "title": "Technical SEO audit", "body": "We crawl your site for speed issues, broken links, duplicate content, and indexation errors — then fix them with a structured sprint plan." },
+      { "title": "Keyword & competitor research", "body": "We identify high-intent keywords your competitors rank for but you don't, revealing the fastest path to incremental organic traffic." },
+      { "title": "On-page optimisation", "body": "Title tags, meta descriptions, heading hierarchy, internal linking, and schema markup — every on-page signal tuned to rank and convert." },
+      { "title": "Link building & authority", "body": "Outreach-driven backlink acquisition from relevant, high-authority domains that signal trust to Google without risking penalties." }
+    ]
+  },
+  {
+    "id": "performance-marketing",
+    "category": "Performance Marketing",
+    "tagline": "Every rupee. Accountable.",
+    "description": "Search, social & display ads strategically optimised to lower costs and increase conversions.",
+    "stat1": { "value": "↓ 40%", "label": "avg. cost-per-lead reduction" },
+    "stat2": { "value": "2–5×", "label": "ROAS improvement" },
+    "platforms": ["Google Ads", "Meta Ads", "TikTok Ads", "LinkedIn Ads", "Programmatic Display"],
+    "sections": [
+      { "title": "Campaign architecture", "body": "We structure campaigns around your funnel — awareness, consideration, conversion — with budgets weighted to where buyers actually decide." },
+      { "title": "Creative & copy testing", "body": "Systematic A/B tests on headlines, visuals, and CTAs ensure your budget is always flowing to the highest-performing creative." },
+      { "title": "Conversion rate optimisation", "body": "Ads are only half the equation. We audit your landing pages and suggest (or build) CRO improvements that turn clicks into customers." },
+      { "title": "Transparent reporting", "body": "Live dashboards with spend, impressions, clicks, cost-per-conversion, and ROAS — accessible 24/7, explained in plain language." }
+    ]
+  },
+  {
+    "id": "branding",
+    "category": "Branding",
+    "tagline": "Memorable identity. Built to scale.",
+    "description": "Logo systems, brand guidelines, and high-impact design assets optimised for recall and revenue.",
+    "stat1": { "value": "Full", "label": "brand system delivered" },
+    "stat2": { "value": "∞", "label": "scalable across every touchpoint" },
+    "platforms": ["Print", "Digital", "Social Media", "Packaging", "Signage"],
+    "sections": [
+      { "title": "Discovery & positioning", "body": "Brand workshops to surface your mission, values, and competitive differentiation — the strategic foundation everything else is built on." },
+      { "title": "Visual identity system", "body": "Logo suite, colour palette, typography hierarchy, and iconography designed to work cohesively across every medium and size." },
+      { "title": "Brand guidelines", "body": "A comprehensive brand book your team and vendors can follow — usage rules, do's and don'ts, tone of voice, and real-world examples." },
+      { "title": "Collateral design", "body": "Business cards, letterheads, social templates, pitch decks, and packaging — all aligned to your new identity from day one." }
+    ]
+  },
+  {
+    "id": "video-production",
+    "category": "Video Production",
+    "tagline": "Stories that sell.",
+    "description": "Brand storytelling and product showcases that build trust and drive sales across TikTok, Reels, and Shorts.",
+    "stat1": { "value": "3–5×", "label": "higher engagement vs. static" },
+    "stat2": { "value": "48hr", "label": "turnaround on short-form edits" },
+    "platforms": ["TikTok", "Instagram Reels", "YouTube Shorts", "LinkedIn Video", "Website Embeds"],
+    "sections": [
+      { "title": "Concept & scripting", "body": "From brief to shoot-ready script — we develop concepts that balance brand authenticity with platform-native formats proven to stop the scroll." },
+      { "title": "Shoot & direction", "body": "Professional on-location or studio production, including talent direction, lighting, and cinematography matched to your brand aesthetic." },
+      { "title": "Post-production & editing", "body": "Colour grading, motion graphics, subtitles, music licensing, and sound design — polished outputs ready for every platform's spec." },
+      { "title": "Distribution strategy", "body": "We advise on posting cadence, hashtag strategy, and paid amplification to maximise views and conversions from every video asset." }
+    ]
+  },
+  {
+    "id": "web-development",
+    "category": "Web Development",
+    "tagline": "Fast. Beautiful. Built to convert.",
+    "description": "Custom websites, e-commerce stores, and mobile-optimised designs built for speed and sales.",
+    "stat1": { "value": "<2s", "label": "target page load time" },
+    "stat2": { "value": "100%", "label": "mobile-optimised by default" },
+    "platforms": ["React / Next.js", "WordPress", "Shopify", "Webflow", "Custom CMS"],
+    "sections": [
+      { "title": "Strategy & wireframing", "body": "We map user journeys before touching code — wireframes and information architecture aligned to conversion goals, not just aesthetics." },
+      { "title": "Design & prototyping", "body": "High-fidelity Figma prototypes reviewed and approved before development begins, eliminating costly late-stage design changes." },
+      { "title": "Development & QA", "body": "Clean, semantic code with cross-browser and cross-device testing. Performance budgets enforced from the first commit." },
+      { "title": "Launch & ongoing support", "body": "Managed deployment, DNS configuration, SSL, and optional retainer support for updates, security patches, and new feature development." }
+    ]
+  }
+]
