@@ -159,7 +159,7 @@ const Footer = () => {
               </h3>
               <div
                 ref={formRef}
-                className="flex items-center border gap-2 border-white/20 h-13 max-w-80 w-full rounded-full overflow-hidden mt-4"
+                className="flex items-center border gap-2 border-white/20  max-w-80 w-full rounded-full overflow-hidden mt-4"
               >
                 <input
                   type="email"
@@ -172,7 +172,7 @@ const Footer = () => {
                   type="submit"
                   onClick={handleSubscribe}
                   disabled={status === "sending" || status === "success"}
-                  className="bg-white text-black hover:bg-black hover:text-white active:scale-95 transition-all duration-300 w-56 h-10 rounded-full text-sm cursor-pointer"
+                  className="bg-white text-black hover:bg-[#ff751f] hover:text-white active:scale-95 transition-all duration-300 w-auto px-6 flex-shrink-0 h-10 rounded-full text-sm cursor-pointer"
                 >
                   {status === "sending"
                     ? "Subscribing..."

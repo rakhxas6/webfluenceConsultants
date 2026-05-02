@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Navbar from "./Navbar";
 
 const WORDS = [
@@ -80,7 +81,7 @@ function ParticleNetwork() {
     window.addEventListener("resize", resize);
 
     const BLUE = "#0025cc", ORANGE = "#ff751f";
-    const COUNT = 55, CONNECT_DIST = 130, SPEED = 0.22;
+    const COUNT = 80, CONNECT_DIST = 130, SPEED = 0.22;
 
     const nodes = Array.from({ length: COUNT }, () => ({
       x:          Math.random() * canvas.width,
@@ -145,52 +146,87 @@ const clipPath =
 
 const Home = () => {
   return (
-    <div className="min-h-screen">
-      <Navbar />
+    <>
+      <Helmet>
+        <title>Webfluence Consultants — Digital Marketing Agency in Nepal</title>
+        <meta
+          name="description"
+          content="Webfluence Consultants is Nepal's growth-focused digital marketing agency. We specialise in SEO, social media, performance ads, branding, video production, and web development."
+        />
+        <meta
+          name="keywords"
+          content="digital marketing agency Nepal, SEO Nepal, social media marketing Nepal, performance marketing, branding Nepal, web development Nepal, Butwal marketing agency"
+        />
+        <link rel="canonical" href="https://webfluence-consultants.vercel.app/" />
 
-      <div className="relative isolate px-6 pt-32 lg:px-8 overflow-hidden">
-        <ParticleNetwork />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Webfluence Consultants — Digital Marketing Agency in Nepal" />
+        <meta
+          property="og:description"
+          content="We partner with ambitious businesses to build digital engines that attract, convert, and retain customers at scale."
+        />
+        <meta property="og:url" content="https://webfluence-consultants.vercel.app/" />
+        <meta property="og:site_name" content="Webfluence Consultants" />
+        <meta property="og:image" content="https://webfluence-consultants.vercel.app/wfc-black.png" />
 
-        <div aria-hidden="true" className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-          <div style={{ clipPath }} className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75" />
-        </div>
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Webfluence Consultants — Digital Marketing Agency in Nepal" />
+        <meta
+          name="twitter:description"
+          content="We partner with ambitious businesses to build digital engines that attract, convert, and retain customers at scale."
+        />
+        <meta name="twitter:image" content="https://webfluence-consultants.vercel.app/wfc-black.png" />
+      </Helmet>
 
-        <div className="relative mx-auto max-w-2xl py-20 sm:py-32 lg:py-36">
-          <div className="mb-8 flex justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm/6 text-[#ff751f] ring-1 ring-[#0025cc]/20 hover:ring-[#0025cc]/40">
-              Excited to take the next step.{" "}
-              <a href="/learn" className="font-semibold text-[#0025cc]">
-                <span aria-hidden="true" className="absolute inset-0" />
-                Read more <span aria-hidden="true">&rarr;</span>
-              </a>
+      <div className="min-h-screen">
+        <Navbar />
+
+        <div className="relative isolate px-6 pt-44 lg:pt-32 lg:px-8 overflow-hidden">
+          <ParticleNetwork />
+
+          <div aria-hidden="true" className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+            <div style={{ clipPath }} className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75" />
+          </div>
+
+          <div className="relative mx-auto max-w-2xl py-20 sm:py-32 lg:py-36">
+            <div className="mb-8 flex justify-center">
+              <div className="relative rounded-full px-3 py-1 text-sm/6 text-[#ff751f] ring-1 ring-[#0025cc]/20 hover:ring-[#0025cc]/40">
+                Excited to take the next step.{" "}
+                <a href="#about" className="font-semibold text-[#0025cc]">
+                  <span aria-hidden="true" className="absolute inset-0" />
+                  Read more <span aria-hidden="true">&rarr;</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl leading-[1.05]">
+                <WordCycler />
+              </h1>
+
+              <p className="mt-6 text-base sm:text-lg font-normal text-gray-500 leading-relaxed max-w-xl mx-auto">
+                We partner with ambitious businesses to build digital engines that attract, convert, and retain customers at scale.
+              </p>
+
+              <div className="mt-10 flex items-center justify-center gap-x-6">
+                <a href="#cta" className="text-sm font-semibold px-4 py-2 bg-[#0025cc] text-white border border-[#0025cc] hover:bg-white hover:text-[#0025cc] transition-colors">
+                  Get started
+                </a>
+                <a href="#services" className="text-sm font-semibold px-4 py-2 text-[#0025cc] border border-[#0025cc] hover:bg-[#0025cc] hover:text-white transition-colors">
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
 
-          <div className="text-center">
-            <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl leading-[1.05]">
-              <WordCycler />
-            </h1>
-
-            <p className="mt-6 text-base sm:text-lg font-normal text-gray-500 leading-relaxed max-w-xl mx-auto">
-              We partner with ambitious businesses to build digital engines that attract, convert, and retain customers at scale. 
-            </p>
-
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a href="#cta" className="text-sm font-semibold px-4 py-2 bg-[#0025cc] text-white border border-[#0025cc] hover:bg-white hover:text-[#0025cc] transition-colors">
-                Get started
-              </a>
-              <a href="#services" className="text-sm font-semibold px-4 py-2 text-[#0025cc] border border-[#0025cc] hover:bg-[#0025cc] hover:text-white transition-colors">
-                Learn more
-              </a>
-            </div>
+          <div aria-hidden="true" className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+            <div style={{ clipPath }} className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75" />
           </div>
-        </div>
-
-        <div aria-hidden="true" className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
-          <div style={{ clipPath }} className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75" />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
