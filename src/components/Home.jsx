@@ -41,7 +41,7 @@ function WordCycler() {
 
   return (
     <>
-      <span className="block text-5xl text-[#ff751f] tracking-wide uppercase leading-[1.05]">We are a</span>
+      <span className="block text-3xl sm:text-5xl text-[#ff751f] tracking-wide uppercase leading-[1.05]">We are a</span>
       <span className="block" style={{ color }}>
         {displayed}
         <span style={{ color }}>.</span>
@@ -180,10 +180,10 @@ const Home = () => {
         <meta name="twitter:image" content="https://webfluence-consultants.vercel.app/wfc-black.png" />
       </Helmet>
 
-      <div className="min-h-screen">
+      <div className="">
         <Navbar />
 
-        <div className="relative isolate px-6 pt-44 lg:pt-32 lg:px-8 overflow-hidden">
+        <div className="relative isolate px-6 pt-36 pb-16 lg:px-8 overflow-hidden">
           <ParticleNetwork />
 
           <div aria-hidden="true" className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
@@ -202,7 +202,7 @@ const Home = () => {
             </div>
 
             <div className="text-center">
-              <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl leading-[1.05]">
+              <h1 className="text-4xl font-semibold tracking-tight sm:text-7xl leading-[1.05]">
                 <WordCycler />
               </h1>
 
@@ -210,7 +210,7 @@ const Home = () => {
                 We partner with ambitious businesses to build digital engines that attract, convert, and retain customers at scale.
               </p>
 
-              <div className="mt-10 flex items-center justify-center gap-x-6">
+              <div className="mt-10 flex items-center justify-center gap-x-6 ">
                 <a href="#cta" className="text-sm font-semibold px-4 py-2 bg-[#0025cc] text-white border border-[#0025cc] hover:bg-white hover:text-[#0025cc] transition-colors">
                   Get started
                 </a>
