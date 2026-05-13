@@ -22,15 +22,23 @@ export default function Contact() {
     } catch (error) {
       console.error("Error sending email:", error);
       setStatus("error");
-    } finally {
-      setTimeout(() => setStatus("idle"), 4000);
     }
+  };
+
+  const closePopup = () => setStatus("idle");
+
+  const handleTryAgain = () => {
+    setStatus("idle");
+    formRef.current?.requestSubmit();
   };
 
   return (
     <>
-      <Helmet>
-        <title>Contact Us | Webfluence Consultants - Digital Marketing Agency in Nepal</title>
+      {/* <Helmet>
+        <title>
+          Contact Us | Webfluence Consultants - Digital Marketing Agency in
+          Nepal
+        </title>
         <meta
           name="description"
           content="Get in touch with Webfluence Consultants. We're based in Butwal, Nepal. Reach us by email at hello@webfluence.com or call +977 986 792 5779."
@@ -39,26 +47,34 @@ export default function Contact() {
           name="keywords"
           content="contact Webfluence Consultants, digital marketing agency Nepal contact, Butwal marketing agency, hello@webfluence.com"
         />
-        <link rel="canonical" href="https://webfluence-consultants.vercel.app/#contact" />
-
-        {/* Open Graph */}
+        <link
+          rel="canonical"
+          href="https://webfluence-consultants.vercel.app/#contact"
+        />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Contact Us | Webfluence Consultants" />
+        <meta
+          property="og:title"
+          content="Contact Us | Webfluence Consultants"
+        />
         <meta
           property="og:description"
           content="Reach out to Webfluence Consultants — Nepal's digital marketing agency. We'd love to hear about your project."
         />
-        <meta property="og:url" content="https://webfluence-consultants.vercel.app/#contact" />
+        <meta
+          property="og:url"
+          content="https://webfluence-consultants.vercel.app/#contact"
+        />
         <meta property="og:site_name" content="Webfluence Consultants" />
-
-        {/* Twitter */}
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Contact Us | Webfluence Consultants" />
+        <meta
+          name="twitter:title"
+          content="Contact Us | Webfluence Consultants"
+        />
         <meta
           name="twitter:description"
           content="Reach out to Webfluence Consultants — Nepal's digital marketing agency. We'd love to hear about your project."
         />
-      </Helmet>
+      </Helmet> */}
 
       <section
         className="py-16 px-4 border-t border-neutral-300 scroll-mt-[8vh]"
@@ -67,7 +83,9 @@ export default function Contact() {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <p className="text-lg text-[#0025cc] font-medium pb-2">Contact Us</p>
+            <p className="text-lg text-[#0025cc] font-medium pb-2">
+              Contact Us
+            </p>
             <h1 className="text-4xl font-semibold text-slate-700 pb-4">
               Get in touch with us
             </h1>
@@ -89,12 +107,11 @@ export default function Contact() {
                 <p className="text-gray-500 text-sm leading-relaxed">
                   We help businesses grow their digital presence through smart
                   strategy, stunning design, and powerful technology. From
-                  startups to enterprises, we deliver solutions that drive clicks,
-                  conversions, and growth.
+                  startups to enterprises, we deliver solutions that drive
+                  clicks, conversions, and growth.
                 </p>
               </div>
 
-              {/* Info Items */}
               <div className="space-y-5">
                 {/* Address */}
                 <div className="flex items-start gap-4">
@@ -106,7 +123,9 @@ export default function Contact() {
                   <div>
                     <p className="text-sm font-medium text-slate-700">Our Office</p>
                     <p className="text-sm text-[#0025cc]">
-                      12, Tamnagar, Butwal<br />Rupandehi, NP 32600
+                      12, Tamnagar, Butwal
+                      <br />
+                      Rupandehi, NP 32600
                     </p>
                   </div>
                 </div>
@@ -152,7 +171,9 @@ export default function Contact() {
                   <div>
                     <p className="text-sm font-medium text-slate-700">Business Hours</p>
                     <p className="text-sm text-[#0025cc]">
-                      Mon – Fri: 9am – 6pm<br />Sat: 10am – 2pm
+                      Mon – Fri: 9am – 6pm
+                      <br />
+                      Sat: 10am – 2pm
                     </p>
                   </div>
                 </div>
@@ -212,15 +233,11 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Status feedback */}
-              {status === "success" && (
-                <p className="text-green-600 text-sm">Message sent successfully!</p>
-              )}
-              {status === "error" && (
-                <p className="text-red-500 text-sm">Something went wrong. Please try again.</p>
-              )}
-
-              <input type="hidden" name="time" value={new Date().toLocaleString()} />
+              <input
+                type="hidden"
+                name="time"
+                value={new Date().toLocaleString()}
+              />
 
               <button
                 type="submit"
@@ -233,6 +250,77 @@ export default function Contact() {
           </div>
         </div>
       </section>
+
+      {/* Popup — outside section so it overlays the whole page */}
+      {(status === "success" || status === "error") && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 p-4"
+          onClick={closePopup}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`flex flex-col items-center w-96 bg-white text-center p-6 rounded-lg border text-sm ${
+              status === "success" ? "border-gray-500/30" : "border-red-200"
+            }`}
+          >
+            {status === "success" ? (
+              <>
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-3">
+                  <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h2 className="text-gray-800 text-xl font-medium pb-2">
+                  Message Sent!
+                </h2>
+                <p className="text-gray-500 w-11/12">
+                  Thanks for reaching out. We'll get back to you at our earliest convenience.
+                </p>
+                <button
+                  type="button"
+                  onClick={closePopup}
+                  className="mt-6 bg-[#0025cc] px-8 py-2 rounded text-white font-medium active:scale-95 transition hover:bg-[#0025cc]/90"
+                >
+                  Done
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mb-3">
+                  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-gray-800 text-xl font-medium pb-2">
+                  Something went wrong
+                </h2>
+                <p className="text-gray-500 w-11/12">
+                  We couldn't send your message. Please try again or email us directly at{" "}
+                  <a href="mailto:hello@webfluence.com" className="text-[#0025cc] hover:underline">
+                    hello@webfluence.com
+                  </a>
+                </p>
+                <div className="flex gap-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={closePopup}
+                    className="px-6 py-2 rounded border border-gray-500/30 text-gray-600 font-medium active:scale-95 transition hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleTryAgain}
+                    className="px-6 py-2 rounded bg-red-500 text-white font-medium active:scale-95 transition hover:bg-red-600"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

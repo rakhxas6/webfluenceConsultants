@@ -184,7 +184,7 @@ const Home = () => {
         <Navbar />
 
         <div className="relative isolate px-6 pt-36 pb-16 lg:px-8 overflow-hidden">
-          <ParticleNetwork />
+          <ParticleNetwork className='hidden md:flex'/>
 
           <div aria-hidden="true" className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
             <div style={{ clipPath }} className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75" />

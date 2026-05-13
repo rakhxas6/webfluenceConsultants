@@ -10,6 +10,13 @@ const Footer = () => {
   const formRef = useRef(null);
   const [status, setStatus] = useState("idle"); // "idle" | "sending" | "success" | "error"
 
+  const closePopup = () => setStatus("idle");
+
+  const handleTryAgain = () => {
+    setStatus("idle");
+    handleSubscribe();
+  };
+
   const handleNavClick = (e, id) => {
     e.preventDefault();
 
@@ -80,7 +87,7 @@ const Footer = () => {
         * { font-family: "Poppins", sans-serif; }
       `}</style>
 
-      <footer className="bg-[#0025cc] py-10 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-[#0025cc]/90 py-10 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-7xl mx-auto">
           <div className="flex flex-wrap justify-between gap-y-12 lg:gap-x-8">
             {/* Brand */}
@@ -159,40 +166,24 @@ const Footer = () => {
               </h3>
               <div
                 ref={formRef}
-                className="flex items-center border gap-2 border-white/20  max-w-80 w-full rounded-full overflow-hidden mt-4"
+                className="flex items-center border gap-2 border-white/20 max-w-80 w-full rounded-full overflow-hidden mt-4"
               >
                 <input
                   type="email"
                   placeholder="Enter your email.."
                   className="w-full h-full pl-6 outline-none text-sm bg-transparent text-white placeholder-white/60 placeholder:text-xs"
                   required
-                  disabled={status === "sending" || status === "success"}
+                  disabled={status === "sending"}
                 />
                 <button
-                  type="submit"
+                  type="button"
                   onClick={handleSubscribe}
-                  disabled={status === "sending" || status === "success"}
-                  className="bg-white text-black hover:bg-[#ff751f] hover:text-white active:scale-95 transition-all duration-300 w-auto px-6 flex-shrink-0 h-10 rounded-full text-sm cursor-pointer"
+                  disabled={status === "sending"}
+                  className="bg-white text-black hover:bg-[#ff751f] hover:text-white active:scale-95 transition-all duration-300 w-auto px-6 flex-shrink-0 h-10 rounded-full text-sm cursor-pointer disabled:opacity-60"
                 >
-                  {status === "sending"
-                    ? "Subscribing..."
-                    : status === "success"
-                      ? "Subscribed!"
-                      : "Subscribe"}
+                  {status === "sending" ? "Subscribing..." : "Subscribe"}
                 </button>
               </div>
-
-              {/* Feedback */}
-              {status === "success" && (
-                <p className="text-green-400 text-xs mt-2">
-                  Welcome aboard! Check your inbox.
-                </p>
-              )}
-              {status === "error" && (
-                <p className="text-red-400 text-xs mt-2">
-                  Something went wrong. Please try again.
-                </p>
-              )}
             </div>
           </div>
 
@@ -231,6 +222,102 @@ const Footer = () => {
           </div>
         </div>
       </footer>
+
+      {/* Popup — outside footer so fixed positioning overlays the full page */}
+      {(status === "success" || status === "error") && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 p-4"
+          onClick={closePopup}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`flex flex-col items-center w-96 bg-white text-center p-6 rounded-lg border text-sm ${
+              status === "success" ? "border-gray-500/30" : "border-red-200"
+            }`}
+          >
+            {status === "success" ? (
+              <>
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-3">
+                  <svg
+                    className="w-5 h-5 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-gray-800 text-xl font-medium pb-2">
+                  You're subscribed!
+                </h2>
+                <p className="text-gray-500 w-11/12">
+                  Welcome aboard! Check your inbox for a confirmation. We'll
+                  keep you updated with the latest news and insights.
+                </p>
+                <button
+                  type="button"
+                  onClick={closePopup}
+                  className="mt-6 bg-[#0025cc] px-8 py-2 rounded text-white font-medium active:scale-95 transition hover:bg-[#0025cc]/90"
+                >
+                  Done
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mb-3">
+                  <svg
+                    className="w-5 h-5 text-red-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-gray-800 text-xl font-medium pb-2">
+                  Something went wrong
+                </h2>
+                <p className="text-gray-500 w-11/12">
+                  We couldn't process your subscription. Please try again or
+                  reach us at{" "}
+                  <a
+                    href="mailto:hello@webfluence.com"
+                    className="text-[#0025cc] hover:underline"
+                  >
+                    hello@webfluence.com
+                  </a>
+                </p>
+                <div className="flex gap-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={closePopup}
+                    className="px-6 py-2 rounded border border-gray-500/30 text-gray-600 font-medium active:scale-95 transition hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleTryAgain}
+                    className="px-6 py-2 rounded bg-red-500 text-white font-medium active:scale-95 transition hover:bg-red-600"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };

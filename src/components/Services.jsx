@@ -25,7 +25,7 @@ export default function Services() {
         </div>
 
         {/* grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-[#ff751f]/90 -m-px">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-[#ff751f]/50 -m-px">
           {servicesData.map((s) => (
             <button
               key={s.id}

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 export default function About() {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>About Us | Webfluence Consultants - Digital Marketing Agency in Nepal</title>
         <meta
           name="description"
@@ -26,14 +26,14 @@ export default function About() {
         <meta property="og:url" content="https://webfluence-consultants.vercel.app/#about" />
         <meta property="og:site_name" content="Webfluence Consultants" />
 
-        {/* Twitter */}
+        {/* Twitter 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="About Us | Webfluence Consultants" />
         <meta
           name="twitter:description"
           content="We don't just build websites — we build digital experiences that convert. Nepal's growth partner for SEO, social, branding, and beyond."
         />
-      </Helmet>
+      </Helmet> */}
 
       <section
         className="py-16 px-4 border-t border-neutral-300 scroll-mt-[30vh]"
