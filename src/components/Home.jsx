@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import bgVideo from "../assets/clients/bgVideo.mp4";
 import Navbar from "./Navbar";
