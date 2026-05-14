@@ -18,9 +18,10 @@ const Navbar = () => {
   }, []);
 
   // Transparent at top of home, solid when scrolled or on other pages
-  const navBg = isHome && !scrolled
-    ? "bg-transparent shadow-none backdrop-blur-none"
-    : "bg-white/60 shadow-md backdrop-blur-sm";
+  const navBg =
+    isHome && !scrolled
+      ? "bg-transparent shadow-none backdrop-blur-none"
+      : "bg-white/60 shadow-md backdrop-blur-sm";
 
   const textColor = isHome && !scrolled ? "text-white" : "text-gray-700";
   const iconColor = isHome && !scrolled ? "#ffffff" : "#0025cc";
@@ -54,8 +55,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 z-50 py-3 md:py-4 transition-all duration-300 ${navBg}`}>
-
+    <nav
+      className={`fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 z-50 py-3 md:py-4 transition-all duration-300 ${navBg}`}
+    >
       {/* Logo */}
       <a href="/" className="flex items-center gap-2">
         <img src={logo2} alt="Logo" className="w-auto h-16" />
@@ -81,11 +83,15 @@ const Navbar = () => {
 
       {/* Desktop Right — WhatsApp button */}
       <div className="hidden md:flex items-center gap-4">
-        <a
+       <a
           href="https://wa.me/9779867925779"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-[#25d366] text-white px-5 py-2.5 rounded-full hover:text-black transition-colors duration-300"
+          className="flex items-center gap-2 bg-[#25d366] text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:text-black"
+          style={{
+            boxShadow: "0 0 12px 3px rgba(37, 211, 102, 0.6)",
+            animation: "whatsappGlow 2s ease-in-out infinite",
+          }}
         >
           <FaWhatsapp size={18} />
           Chat with us
@@ -141,7 +147,11 @@ const Navbar = () => {
           href="https://wa.me/9779867925779"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-[#25d366] text-white px-5 py-2.5 rounded-full hover:text-black transition-colors duration-300"
+          className="flex items-center gap-2 bg-[#25d366] text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:text-black"
+          style={{
+            boxShadow: "0 0 12px 3px rgba(37, 211, 102, 0.6)",
+            animation: "whatsappGlow 2s ease-in-out infinite",
+          }}
         >
           <FaWhatsapp size={18} />
           Chat with us
