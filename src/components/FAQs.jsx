@@ -29,21 +29,21 @@ const FAQs = () => {
       answer:
         "Retainer for ongoing growth work. Fixed fee for defined projects like a brand identity or website build. We don't do pure performance deals — they create the wrong incentives and usually mean someone's taking shortcuts somewhere.",
     },
-    {
-      question: "Will we own all the assets and accounts you build for us?",
-      answer:
-        "Always. Every ad account, every domain, every piece of creative, every line of code — it's yours from day one. We're granted access, not ownership. If we ever part ways, you walk away with everything intact.",
-    },
-    {
-      question: "What's the minimum budget you work with?",
-      answer:
-        "For ad spend, we recommend a minimum of $100/month to generate meaningful data — below that, the algorithm doesn't have enough signal and results are unreliable. Our management fee is separate and scales with scope. We'd rather be honest about this than take your money and underdeliver.",
-    },
-    {
-      question: "How do we know if this is actually working?",
-      answer:
-        "You get a live dashboard, not a monthly PDF. Revenue, ROAS, leads, rankings, conversion rate — tracked in real time. We do a structured review call every month and flag problems before you notice them.",
-    },
+    // {
+    //   question: "Will we own all the assets and accounts you build for us?",
+    //   answer:
+    //     "Always. Every ad account, every domain, every piece of creative, every line of code — it's yours from day one. We're granted access, not ownership. If we ever part ways, you walk away with everything intact.",
+    // },
+    // {
+    //   question: "What's the minimum budget you work with?",
+    //   answer:
+    //     "For ad spend, we recommend a minimum of $100/month to generate meaningful data — below that, the algorithm doesn't have enough signal and results are unreliable. Our management fee is separate and scales with scope. We'd rather be honest about this than take your money and underdeliver.",
+    // },
+    // {
+    //   question: "How do we know if this is actually working?",
+    //   answer:
+    //     "You get a live dashboard, not a monthly PDF. Revenue, ROAS, leads, rankings, conversion rate — tracked in real time. We do a structured review call every month and flag problems before you notice them.",
+    // },
   ];
   return (
     <section
