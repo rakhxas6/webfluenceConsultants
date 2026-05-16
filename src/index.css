@@ -13,3 +13,24 @@
     box-shadow: 0 0 2px 4px rgba(37, 211, 102, 0.9);
   }
 }
+
+
+/* brands scroll effect */
+
+.marquee-inner {
+  animation: marqueeScroll linear infinite;
+}
+@keyframes marqueeScroll {
+          0%   { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+}
+
+/* services icon */
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(0); }
+  20%       { transform: rotate(-15deg) scale(1.1); }
+  40%       { transform: rotate(15deg) scale(1.15); }
+  60%       { transform: rotate(-10deg) scale(1.1); }
+  80%       { transform: rotate(8deg) scale(1.05); }
+}

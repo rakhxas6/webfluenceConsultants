@@ -1,34 +1,75 @@
-import React from "react";
-
-const companyLogos = [
-  "slack",
-  "framer",
-  "netflix",
-  "google",
-  "linkedin",
-  "instagram",
-  "facebook",
-];
+import React, { useEffect, useState } from "react";
+import { supabase } from "./supabase/supabaseClient";
 
 const Brands = () => {
-  return (
-    <section className="py-16 bg-slate-100/70 px-4 border-t border-neutral-300">
-      <style>{`
-        .marquee-inner {
-          animation: marqueeScroll linear infinite;
-        }
-        @keyframes marqueeScroll {
-          0%   { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
+  const [logos, setLogos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    async function fetchLogos() {
+      const { data, error } = await supabase
+        .from("company_logos")
+        .select("id, name, image_url")
+        .eq("is_published", true)
+        .order("display_order");
+
+      // console.log(data);
+
+      if (!error && data) {
+        // Duplicate for seamless infinite scroll
+        setLogos([...data, ...data]);
+      }
+      setLoading(false);
+    }
+
+    fetchLogos();
+  }, []);
+
+  const styles = {
+    wrapper: {
+      width: "100%",
+      backgroundColor: "var(--bg, #0a0a0a)",
+      padding: "0",
+      overflow: "hidden",
+    },
+    loadingRow: {
+      display: "flex",
+      alignItems: "center",
+      gap: "48px",
+      padding: "20px 48px",
+    },
+    skeleton: {
+      height: "28px",
+      width: "90px",
+      borderRadius: "4px",
+      background:
+        "linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%)",
+      backgroundSize: "400px 100%",
+      animation: "shimmer 1.4s ease-in-out infinite",
+    },
+  };
+
+  if (loading) {
+    return (
+      <div style={styles.wrapper}>
+        <div style={styles.loadingRow}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} style={styles.skeleton} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  
+  return (
+    <section className="py-16 bg-slate-100/30 px-4 border-t border-neutral-300">
       <h2 className="text-3xl font-semibold text-center mx-auto text-slate-600">
         Our Clients
       </h2>
 
-      <div className="flex items-center w-max mx-auto gap-2 border border-gray-200 text-slate-400 rounded-full pl-4 pr-3 py-1 mt-6 text-sm">
-        Over 100+ companies we have worked with
+      <div className="flex items-center w-max mx-auto gap-2 border border-[#ff751f]/90 text-slate-400 rounded-full pl-4 pr-3 py-1 mt-6 text-sm">
+        Over 10+ companies we have worked with
         <span className="text-gray-500 text-base">•</span>
         <a href="#works" className="flex items-center gap-1 text-gray-500">
           Learn more
@@ -55,17 +96,17 @@ const Brands = () => {
         {/* Left fade */}
         <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-slate-100 to-transparent" />
 
-        {/* Marquee — single flat row with logos doubled for seamless loop */}
+        {/* Marquee — doubled for seamless loop */}
         <div
           className="marquee-inner flex items-center will-change-transform"
           style={{ animationDuration: "15s", width: "max-content" }}
         >
-          {[...companyLogos, ...companyLogos].map((company, index) => (
+          {[...logos, ...logos].map((company, index) => (
             <img
               key={index}
-              src={`https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/companyLogo/${company}.svg`}
-              alt={company}
-              className="h-8 w-auto object-contain mx-8 opacity-60 hover:opacity-100 transition-opacity duration-200"
+              src={company.image_url}
+              alt={company.name}
+              className="h-12 w-auto object-contain mx-8 opacity-80 hover:opacity-100 transition-opacity duration-200"
               draggable={false}
             />
           ))}

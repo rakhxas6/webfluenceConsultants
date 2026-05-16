@@ -82,11 +82,6 @@ const Footer = () => {
 
   return (
     <>
-      <style>{`
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-        * { font-family: "Poppins", sans-serif; }
-      `}</style>
-
       <footer className="bg-[#0025cc]/90 py-10 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-7xl mx-auto">
           <div className="flex flex-wrap justify-between gap-y-12 lg:gap-x-8">
@@ -187,7 +182,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="w-full h-px mt-16 mb-4 bg-gradient-to-r from-white via-black/25 to-white" />
+          <div className="w-full h-px mt-12 mb-4 bg-gradient-to-r from-white via-black/25 to-white" />
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-white/60">

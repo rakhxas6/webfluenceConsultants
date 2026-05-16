@@ -1,62 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "./supabase/supabaseClient";
 
 const FAQs = () => {
   const [openIndex, setOpenIndex] = React.useState(null);
 
-  const faqs = [
-    {
-      question: "What does a typical engagement actually look like?",
-      answer:
-        "It starts with a proper audit — not a sales pitch. We look at what you have, what's working, and where the money is leaking before we propose anything. From there, we agree on a 90-day scope with clear deliverables, then move to a rolling retainer once you see real numbers.",
-    },
-    {
-      question: "How long before we see results?",
-      answer:
-        "Paid media can move within 2–4 weeks. SEO and CRO compound over 3–6 months. We're transparent about this upfront — if you need results by next Tuesday, paid is the lever. If you want compounding returns, we build the whole system.",
-    },
-    {
-      question: "Do you work with businesses outside Nepal?",
-      answer:
-        "Yes. About half our clients are international — primarily the US, UK, Australia, and the Gulf. Our pricing is competitive globally, and we operate across time zones without you needing to adjust your schedule significantly.",
-    },
-    {
-      question: "What industries do you specialise in?",
-      answer:
-        "We don't pretend to know every vertical equally. We're strongest in e-commerce, hospitality & tourism, professional services, and SaaS. If your industry isn't on that list, we'll tell you honestly whether we're the right fit.",
-    },
-    {
-      question: "How do you charge — retainer, project, or performance?",
-      answer:
-        "Retainer for ongoing growth work. Fixed fee for defined projects like a brand identity or website build. We don't do pure performance deals — they create the wrong incentives and usually mean someone's taking shortcuts somewhere.",
-    },
-    // {
-    //   question: "Will we own all the assets and accounts you build for us?",
-    //   answer:
-    //     "Always. Every ad account, every domain, every piece of creative, every line of code — it's yours from day one. We're granted access, not ownership. If we ever part ways, you walk away with everything intact.",
-    // },
-    // {
-    //   question: "What's the minimum budget you work with?",
-    //   answer:
-    //     "For ad spend, we recommend a minimum of $100/month to generate meaningful data — below that, the algorithm doesn't have enough signal and results are unreliable. Our management fee is separate and scales with scope. We'd rather be honest about this than take your money and underdeliver.",
-    // },
-    // {
-    //   question: "How do we know if this is actually working?",
-    //   answer:
-    //     "You get a live dashboard, not a monthly PDF. Revenue, ROAS, leads, rankings, conversion rate — tracked in real time. We do a structured review call every month and flag problems before you notice them.",
-    // },
-  ];
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchFaqs() {
+      const { data, error } = await supabase
+        .from("faqs")
+        .select("id, question, answer")
+        .eq("is_published", true)
+        .order("display_order");
+
+      if (error) console.error(error);
+      else setFaqs(data);
+
+      setLoading(false);
+    }
+
+    fetchFaqs();
+  }, []);
+
+  if (loading)
+    return (
+      <section className="py-16 px-4 border-t border-neutral-300">
+        <div className="max-w-xl mx-auto flex flex-col items-center justify-center px-4 md:px-0">
+          {Array.from({ length: faqs.length || 5 }).map((_, i) => (
+            <div key={i} className="border-b border-slate-200 py-4 w-full">
+              <div className="flex items-center justify-between">
+                <div className="h-4 bg-slate-200 rounded animate-pulse w-3/4" />
+                <div className="h-4 w-4 bg-slate-200 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+
   return (
     <section
       className="py-16 px-4 border-t border-neutral-300 scroll-mt-[10vh]"
       id="faq"
     >
-      <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-            
-                * {
-                    font-family: 'Poppins', sans-serif;
-                }
-            `}</style>
       <div className="max-w-xl mx-auto flex flex-col items-center justify-center px-4 md:px-0">
         <p className="text-lg text-[#0025cc] font-medium pb-2">FAQ'S</p>
         <h1 className="text-3xl font-semibold text-center">

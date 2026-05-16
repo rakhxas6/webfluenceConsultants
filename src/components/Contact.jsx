@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-// import { Helmet } from "react-helmet-async";
+
 
 export default function Contact() {
   const formRef = useRef(null);
@@ -34,48 +34,7 @@ export default function Contact() {
 
   return (
     <>
-      {/* <Helmet>
-        <title>
-          Contact Us | Webfluence Consultants - Digital Marketing Agency in
-          Nepal
-        </title>
-        <meta
-          name="description"
-          content="Get in touch with Webfluence Consultants. We're based in Butwal, Nepal. Reach us by email at hello@webfluence.com or call +977 986 792 5779."
-        />
-        <meta
-          name="keywords"
-          content="contact Webfluence Consultants, digital marketing agency Nepal contact, Butwal marketing agency, hello@webfluence.com"
-        />
-        <link
-          rel="canonical"
-          href="https://webfluence-consultants.vercel.app/#contact"
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content="Contact Us | Webfluence Consultants"
-        />
-        <meta
-          property="og:description"
-          content="Reach out to Webfluence Consultants — Nepal's digital marketing agency. We'd love to hear about your project."
-        />
-        <meta
-          property="og:url"
-          content="https://webfluence-consultants.vercel.app/#contact"
-        />
-        <meta property="og:site_name" content="Webfluence Consultants" />
-        <meta name="twitter:card" content="summary" />
-        <meta
-          name="twitter:title"
-          content="Contact Us | Webfluence Consultants"
-        />
-        <meta
-          name="twitter:description"
-          content="Reach out to Webfluence Consultants — Nepal's digital marketing agency. We'd love to hear about your project."
-        />
-      </Helmet> */}
-
+   
       <section
         className="py-16 px-4 border-t border-neutral-300 scroll-mt-[8vh]"
         id="contact"
@@ -242,7 +201,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="self-start bg-[#0025cc] text-white h-12 px-10 rounded active:scale-95 transition hover:bg-[#0025cc]/90 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="self-start bg-gradient-to-r from-[#0025cc] to-[#8A7DFF] hover:-translate-y-0.5 text-white h-12 px-10 rounded active:scale-95 transition hover:bg-[#0025cc]/90 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {status === "sending" ? "Sending..." : "Send Message"}
               </button>

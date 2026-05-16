@@ -33,9 +33,8 @@ export default function Services() {
               className="group bg-white px-8 py-10 flex flex-col gap-4 hover:bg-[#f7f8ff] transition-colors duration-200 cursor-pointer text-left  -m-px w-full"
             >
               {/* icon */}
-              <div className="flex justify-center text-white opacity-70 group-hover:opacity-100 transition-opacity duration-200">
-                <span className="bg-[#0025cc] p-5 rounded-full">
-                  {serviceIcons[s.id]}
+              <div className="flex justify-center text-white opacity-70 group-hover:opacity-100   transition-opacity duration-200">
+<span className="bg-[#0025cc] p-5 rounded-full transition-all duration-200 group-hover:[animation:wobble_0.5s_ease]">                  {serviceIcons[s.id]}
                 </span>
               </div>
               {/* title */}
