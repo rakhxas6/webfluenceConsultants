@@ -63,7 +63,7 @@ const Brands = () => {
 
   
   return (
-    <section className="py-16 bg-slate-100/30 px-4 border-t border-neutral-300">
+    <section className="py-16 bg-slate-100/70 px-4 border-t border-neutral-300">
       <h2 className="text-3xl font-semibold text-center mx-auto text-slate-600">
         Our Clients
       </h2>
@@ -92,7 +92,7 @@ const Brands = () => {
         </a>
       </div>
 
-      <div className="overflow-hidden w-full relative max-w-5xl mx-auto select-none mt-10">
+      <div className="overflow-hidden w-full relative max-w-7xl mx-auto select-none mt-10">
         {/* Left fade */}
         <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-slate-100 to-transparent" />
 
