@@ -1,94 +1,95 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase/supabaseClient";
+import Section from "./molecules/Section";
+import SectionHeader from "./molecules/SectionHeader";
+import AccordionItem from "./molecules/AccordionItem";
+import StateBlock from "./molecules/StateBlock";
+import Skeleton from "./atoms/Skeleton";
+import Button from "./atoms/Button";
 
-const FAQs = () => {
-  const [openIndex, setOpenIndex] = React.useState(null);
-
+export default function FAQs() {
   const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState("loading");
+  const [openId, setOpenId] = useState(null);
 
   useEffect(() => {
-    async function fetchFaqs() {
+    let cancelled = false;
+
+    (async () => {
       const { data, error } = await supabase
         .from("faqs")
         .select("id, question, answer")
         .eq("is_published", true)
         .order("display_order");
 
-      if (error) console.error(error);
-      else setFaqs(data);
+      if (cancelled) return;
+      if (error) {
+        console.error(error);
+        setStatus("error");
+        return;
+      }
+      setFaqs(data || []);
+      setStatus("ready");
+    })();
 
-      setLoading(false);
-    }
-
-    fetchFaqs();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  if (loading)
-    return (
-      <section className="py-16 px-4 border-t border-neutral-300">
-        <div className="max-w-xl mx-auto flex flex-col items-center justify-center px-4 md:px-0">
-          {Array.from({ length: faqs.length || 5 }).map((_, i) => (
-            <div key={i} className="border-b border-slate-200 py-4 w-full">
-              <div className="flex items-center justify-between">
-                <div className="h-4 bg-slate-200 rounded animate-pulse w-3/4" />
-                <div className="h-4 w-4 bg-slate-200 rounded animate-pulse" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-
   return (
-    <section
-      className="py-16 px-4 border-t border-neutral-300 scroll-mt-[10vh]"
-      id="faq"
-    >
-      <div className="max-w-xl mx-auto flex flex-col items-center justify-center px-4 md:px-0">
-        <p className="text-lg text-[#0025cc] font-medium pb-2">FAQ'S</p>
-        <h1 className="text-3xl font-semibold text-center">
-          Looking for answer?
-        </h1>
-        <p className="text-sm text-slate-500 mt-2 pb-8 text-center">
-          Honest answers — no fluff, no soft sells. Still have something
-          specific? Use the form above and we'll reply within a business day.
-        </p>
-        {faqs.map((faq, index) => (
-          <div
-            className="border-b border-slate-200 py-4 cursor-pointer w-full"
-            key={index}
-            onClick={() => setOpenIndex(openIndex === index ? null : index)}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium">{faq.question}</h3>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className={`${openIndex === index ? "rotate-180" : ""} transition-all duration-500 ease-in-out`}
-              >
-                <path
-                  d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2"
-                  stroke="#1D293D"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <p
-              className={`text-sm text-slate-500 transition-all duration-500 ease-in-out max-w-md ${openIndex === index ? "opacity-100 max-h-[300px] translate-y-0 pt-4" : "opacity-0 max-h-0 -translate-y-2"}`}
-            >
-              {faq.answer}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
+    <Section id="faq" ground="raised">
+      <SectionHeader
+        index={5}
+        eyebrow="Questions"
+        lines={[<>Answers,</>, <>no soft sell</>]}
+        standfirst="The things people ask before signing. Still have something specific? Use the form above and we'll reply within a business day."
+        action={
+          <Button href="#contact" variant="outline" size="md" arrow className="self-start border-rule-strong">
+            Ask us directly
+          </Button>
+        }
+      />
 
-export default FAQs;
+      <div className="mx-auto mt-14 max-w-3xl">
+        {status === "loading" && (
+          <div className="border-t border-rule">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-8 border-b border-rule py-7">
+                <Skeleton className="h-3 w-6 shrink-0" />
+                <Skeleton className="h-4 flex-1" style={{ maxWidth: `${70 - i * 6}%` }} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {status === "error" && (
+          <StateBlock tone="error" title="Couldn't load the FAQ">
+            Reach out on the form above and we'll answer anything directly.
+          </StateBlock>
+        )}
+
+        {status === "ready" && faqs.length === 0 && (
+          <StateBlock title="No questions published yet">
+            We're writing these up. In the meantime, just ask.
+          </StateBlock>
+        )}
+
+        {status === "ready" && faqs.length > 0 && (
+          <div className="border-t border-rule">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={faq.id}
+                index={i + 1}
+                question={faq.question}
+                answer={faq.answer}
+                open={openId === faq.id}
+                onToggle={() => setOpenId(openId === faq.id ? null : faq.id)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </Section>
+  );
+}

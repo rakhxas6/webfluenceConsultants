@@ -1,51 +1,65 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import * as motionLib from "motion/react";
+import { ArrowUp } from "lucide-react";
+import { EASE, DURATION } from "../lib/motion";
+import { scrollTo } from "../lib/useSmoothScroll";
+import { useReducedMotion } from "../lib/useMotionSafe";
 
-const BackToTop = () => {
+const { motion, AnimatePresence, useScroll, useSpring } = motionLib;
+
+/**
+ * Back-to-top control with a progress ring drawn from actual scroll position —
+ * the ring doubles as the "how far through am I" indicator.
+ */
+export default function BackToTop() {
   const [visible, setVisible] = useState(false);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const ring = useSpring(scrollYProgress, { stiffness: 220, damping: 32, restDelta: 0.001 });
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setVisible(window.scrollY > 600);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return visible ? (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      aria-label="Back to top"
-      style={{
-        position: "fixed",
-        bottom: "28px",
-        right: "28px",
-        width: "46px",
-        height: "46px",
-        borderRadius: "50%",
-        background: "#0025cc",
-        border: "2px solid white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999,
-        cursor: "pointer",
-        transition: "transform 0.15s ease, opacity 0.2s ease",
-      }}
-      onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.08)")}
-      onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
-    >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M18 15l-6-6-6 6" />
-      </svg>
-    </button>
-  ) : null;
-};
-
-export default BackToTop;
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          type="button"
+          onClick={() => scrollTo(0)}
+          aria-label="Back to top"
+          initial={{ opacity: 0, y: reduced ? 0 : 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: reduced ? 0 : 14 }}
+          transition={{ duration: DURATION.fast, ease: EASE }}
+          className="group/top fixed bottom-6 right-6 z-sticky flex h-12 w-12 cursor-pointer items-center justify-center border border-ink bg-paper text-ink transition-colors duration-300 ease-editorial hover:bg-ink hover:text-paper sm:bottom-8 sm:right-8"
+        >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 48 48"
+            className="pointer-events-none absolute inset-0 h-full w-full -rotate-90"
+          >
+            <motion.circle
+              cx="24"
+              cy="24"
+              r="21"
+              fill="none"
+              stroke="#FF751F"
+              strokeWidth="2"
+              pathLength="1"
+              style={{ pathLength: ring }}
+            />
+          </svg>
+          <ArrowUp
+            className="relative h-4 w-4 transition-transform duration-300 ease-editorial group-hover/top:-translate-y-0.5 motion-reduce:transition-none"
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+}

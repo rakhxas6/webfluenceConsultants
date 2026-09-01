@@ -1,122 +1,81 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase/supabaseClient";
+import { useNavigate } from "react-router-dom";
+import Section from "./molecules/Section";
+import Marquee from "./atoms/Marquee";
+import Label from "./atoms/Label";
+import Rule from "./atoms/Rule";
+import Reveal from "./atoms/Reveal";
+import Skeleton from "./atoms/Skeleton";
+import Button from "./atoms/Button";
 
-const Brands = () => {
+export default function Brands() {
   const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchLogos() {
+    let cancelled = false;
+
+    (async () => {
       const { data, error } = await supabase
         .from("company_logos")
         .select("id, name, image_url")
         .eq("is_published", true)
         .order("display_order");
 
-      // console.log(data);
-
-      if (!error && data) {
-        // Duplicate for seamless infinite scroll
-        setLogos([...data, ...data]);
-      }
+      if (cancelled) return;
+      if (error) console.error(error);
+      setLogos(data || []);
       setLoading(false);
-    }
+    })();
 
-    fetchLogos();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const styles = {
-    wrapper: {
-      width: "100%",
-      backgroundColor: "var(--bg, #0a0a0a)",
-      padding: "0",
-      overflow: "hidden",
-    },
-    loadingRow: {
-      display: "flex",
-      alignItems: "center",
-      gap: "48px",
-      padding: "20px 48px",
-    },
-    skeleton: {
-      height: "28px",
-      width: "90px",
-      borderRadius: "4px",
-      background:
-        "linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%)",
-      backgroundSize: "400px 100%",
-      animation: "shimmer 1.4s ease-in-out infinite",
-    },
-  };
+  if (!loading && logos.length === 0) return null;
 
-  if (loading) {
-    return (
-      <div style={styles.wrapper}>
-        <div style={styles.loadingRow}>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} style={styles.skeleton} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  
   return (
-    <section className="py-16 bg-slate-100/70 px-4 border-t border-neutral-300">
-      <h2 className="text-3xl font-semibold text-center mx-auto text-slate-600">
-        Our Clients
-      </h2>
-
-      <div className="flex items-center w-max mx-auto gap-2 border border-[#ff751f]/90 text-slate-400 rounded-full pl-4 pr-3 py-1 mt-6 text-sm">
-        Over 10+ companies we have worked with
-        <span className="text-gray-500 text-base">•</span>
-        <a href="#works" className="flex items-center gap-1 text-gray-500">
-          Learn more
-          <svg
-            className="mt-1"
-            width="6"
-            height="9"
-            viewBox="0 0 6 9"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m1 1 4 3.5L1 8"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </a>
-      </div>
-
-      <div className="overflow-hidden w-full relative max-w-7xl mx-auto select-none mt-10">
-        {/* Left fade */}
-        <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-slate-100 to-transparent" />
-
-        {/* Marquee — doubled for seamless loop */}
-        <div
-          className="marquee-inner flex items-center will-change-transform"
-          style={{ animationDuration: "15s", width: "max-content" }}
+    <Section ground="raised" className="py-16 sm:py-20">
+      <Reveal className="flex flex-wrap items-baseline justify-between gap-4 pb-6">
+        <Label rule>Trusted by</Label>
+        <Button
+          onClick={() => navigate("/work")}
+          variant="outline"
+          size="sm"
+          arrow
+          className="border-rule-strong"
         >
-          {[...logos, ...logos].map((company, index) => (
-            <img
-              key={index}
-              src={company.image_url}
-              alt={company.name}
-              className="h-12 w-auto object-contain mx-8 opacity-80 hover:opacity-100 transition-opacity duration-200"
-              draggable={false}
-            />
-          ))}
-        </div>
+          See the work
+        </Button>
+      </Reveal>
+      <Rule />
 
-        {/* Right fade */}
-        <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-slate-100 to-transparent" />
+      <div className="pt-10">
+        {loading ? (
+          <div className="flex gap-16 overflow-hidden">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-8 w-28 shrink-0" />
+            ))}
+          </div>
+        ) : (
+          <Marquee speed={38} fadeFrom="from-paper-raised" gap="gap-16">
+            {logos.map((company) => (
+              <img
+                key={company.id}
+                src={company.image_url}
+                alt={company.name}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                className="h-9 w-auto shrink-0 object-contain opacity-55 grayscale transition-[opacity,filter] duration-300 ease-editorial hover:opacity-100 hover:grayscale-0 sm:h-11"
+              />
+            ))}
+          </Marquee>
+        )}
       </div>
-    </section>
+    </Section>
   );
-};
-
-export default Brands;
+}

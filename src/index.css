@@ -1,36 +1,143 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
-/* whatsapp glow */
-@keyframes whatsappGlow {
-  0%, 100% {
-    box-shadow: 0 0 1px 2px rgba(37, 211, 102, 0.6);
+@layer base {
+  :root {
+    --nav-h: 4.5rem;
+    --paper: #fafaf8;
+    --ink: #0a0a0a;
   }
-  50% {
-    box-shadow: 0 0 2px 4px rgba(37, 211, 102, 0.9);
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Anchors clear the fixed masthead */
+    scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    font-synthesis-weight: none;
+  }
+
+  /* Visible, branded focus ring on every interactive element */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid theme("colors.brand.DEFAULT");
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  ::selection {
+    background: theme("colors.flame.DEFAULT");
+    color: #fff;
+  }
+
+  /* Tabular numerals everywhere numbers are compared */
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }
 
+@layer components {
+  /* ── Editorial substrate ───────────────────────────────────────────── */
+  /* Hairline grid. One class carries both image and size so the two can never
+     be split across a class-merge. */
+  .substrate {
+    background-image:
+      linear-gradient(to right, rgba(10, 10, 10, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 10, 10, 0.045) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  @media (min-width: 640px) {
+    .substrate {
+      background-size: 72px 72px;
+    }
+  }
 
-/* brands scroll effect */
+  .paper-grain {
+    position: relative;
+  }
+  .paper-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.32;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
 
-.marquee-inner {
-  animation: marqueeScroll linear infinite;
+  /* ── Link underline that draws in from the left ────────────────────── */
+  .link-draw {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-draw:hover,
+  .link-draw:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  /* ── Masked line reveal (used by <RevealLines>) ─────────────────────
+     The display scale runs at 0.86 leading, so glyph bottoms sit below the
+     line box. The padding buys the descenders room inside the clip; the equal
+     negative margin gives that room straight back to the layout. */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.18em;
+    margin-bottom: -0.18em;
+  }
+
+  /* Marquee halts on hover/focus so users can actually read logos */
+  .marquee-track:hover,
+  .marquee-track:focus-within {
+    animation-play-state: paused;
+  }
+
+  .skeleton {
+    @apply bg-paper-deep;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.85) 50%,
+      transparent 100%
+    );
+    background-size: 60% 100%;
+    background-repeat: no-repeat;
+    @apply animate-shimmer;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }
-@keyframes marqueeScroll {
-          0%   { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-}
 
-/* services icon */
-
-@keyframes wobble {
-  0%, 100% { transform: rotate(0); }
-  20%       { transform: rotate(-15deg) scale(1.1); }
-  40%       { transform: rotate(15deg) scale(1.15); }
-  60%       { transform: rotate(-10deg) scale(1.1); }
-  80%       { transform: rotate(8deg) scale(1.05); }
+/* ── Motion preferences are non-negotiable ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

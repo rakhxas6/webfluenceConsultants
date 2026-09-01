@@ -1,164 +1,226 @@
-import React from "react";
-import logo2 from "../assets/logo/17.png";
-import { FaWhatsapp } from "react-icons/fa";
-const { useNavigate, useLocation } = require("react-router-dom");
+import React, { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as motionLib from "motion/react";
+import { MessageCircle } from "lucide-react";
+import logo from "../assets/logo/17.png";
+import Button from "./atoms/Button";
+import Numeral from "./atoms/Numeral";
+import { cn } from "../lib/cn";
+import { EASE, DURATION } from "../lib/motion";
+import { scrollTo } from "../lib/useSmoothScroll";
+import { useReducedMotion } from "../lib/useMotionSafe";
+import { NAV_LINKS, WHATSAPP_URL } from "../lib/site";
 
-const Navbar = () => {
+const { motion, AnimatePresence, useScroll, useSpring } = motionLib;
+
+/**
+ * Fixed masthead.
+ *
+ * Reads as a printed running head: rule underneath, mono link set, and a
+ * scroll-progress hairline pinned to the bottom edge. It stays opaque from the
+ * first pixel — a transparent nav over a light hero is where contrast bugs
+ * live.
+ */
+export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [scrolled, setScrolled] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [condensed, setCondensed] = useState(false);
+  const reduced = useReducedMotion();
 
-  const isHome = location.pathname === "/";
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 240, damping: 34, restDelta: 0.001 });
 
-  React.useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+  useEffect(() => {
+    const onScroll = () => setCondensed(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Transparent at top of home, solid when scrolled or on other pages
-  const navBg =
-    isHome && !scrolled
-      ? "bg-transparent shadow-none backdrop-blur-none"
-      : "bg-white/60 shadow-md backdrop-blur-sm";
+  // Close the overlay on route change and lock the page behind it while open
+  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
-  const textColor = isHome && !scrolled ? "text-white" : "text-gray-700";
-  const iconColor = isHome && !scrolled ? "#ffffff" : "#0025cc";
+  const go = useCallback(
+    (e, link) => {
+      e.preventDefault();
+      setOpen(false);
 
-  const navLinks = [
-    { name: "Home", path: "/", id: null },
-    { name: "Services", path: "/", id: "services" },
-    { name: "Work", path: "/work", id: null },
-    { name: "Contact", path: "/", id: "contact" },
-    { name: "About", path: "/", id: "about" },
-  ];
+      if (!link.hash) {
+        navigate(link.path);
+        scrollTo(0, { immediate: true });
+        return;
+      }
+      const jump = () => {
+        const el = document.getElementById(link.hash);
+        if (el) scrollTo(el);
+      };
+      if (location.pathname === link.path) jump();
+      else {
+        navigate(link.path);
+        // Wait for the target route to mount before hunting for the anchor
+        requestAnimationFrame(() => setTimeout(jump, 120));
+      }
+    },
+    [navigate, location.pathname],
+  );
 
-  const handleNavClick = (e, link) => {
-    e.preventDefault();
-    setIsMenuOpen(false);
-    if (!link.id) {
-      navigate(link.path);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    if (location.pathname === "/") {
-      const el = document.getElementById(link.id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
-    navigate("/");
-    setTimeout(() => {
-      const el = document.getElementById(link.id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
+  const isCurrent = (link) =>
+    link.hash ? false : location.pathname === link.path;
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 z-50 py-3 md:py-4 transition-all duration-300 ${navBg}`}
-    >
-      {/* Logo */}
-      <a href="/" className="flex items-center gap-2">
-        <img src={logo2} alt="Logo" className="w-auto h-16" />
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-modal focus:border focus:border-ink focus:bg-paper focus:px-4 focus:py-3 focus:font-meta focus:text-meta focus:uppercase"
+      >
+        Skip to content
       </a>
 
-      {/* Desktop Nav */}
-      <div className="hidden md:flex items-center gap-4 lg:gap-8">
-        {navLinks.map((link, i) => (
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-nav border-b bg-paper/85 backdrop-blur-md transition-[border-color,box-shadow] duration-300 ease-swift",
+          condensed ? "border-rule shadow-[0_1px_0_0_rgba(10,10,10,0.04)]" : "border-transparent",
+        )}
+      >
+        <div className="mx-auto flex h-[var(--nav-h)] w-full max-w-shell items-center justify-between gap-6 px-gutter">
           <a
-            key={i}
-            href={link.id ? `/#${link.id}` : link.path}
-            onClick={(e) => handleNavClick(e, link)}
-            className={`group flex flex-col gap-0.5 transition-colors duration-300 ${textColor}`}
+            href="/"
+            onClick={(e) => go(e, { path: "/" })}
+            aria-label="Webfluence Consultants — home"
+            className="flex shrink-0 items-center"
           >
-            {link.name}
-            <div
-              className="h-0.5 w-0 group-hover:w-full transition-all duration-300"
-              style={{ background: iconColor }}
+            <img
+              src={logo}
+              alt="Webfluence Consultants"
+              width="150"
+              height="44"
+              className={cn(
+                "w-auto origin-left transition-all duration-300 ease-editorial",
+                condensed ? "h-9" : "h-11",
+              )}
             />
           </a>
-        ))}
-      </div>
 
-      {/* Desktop Right — WhatsApp button */}
-      <div className="hidden md:flex items-center gap-4">
-       <a
-          href="https://wa.me/9779867925779"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-[#25d366] text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:text-black"
-          style={{
-            boxShadow: "0 0 12px 3px rgba(37, 211, 102, 0.6)",
-            animation: "whatsappGlow 2s ease-in-out infinite",
-          }}
-        >
-          <FaWhatsapp size={18} />
-          Chat with us
-        </a>
-      </div>
+          <nav aria-label="Primary" className="hidden items-center gap-9 md:flex">
+            {NAV_LINKS.map((link, i) => (
+              <a
+                key={link.name}
+                href={link.hash ? `${link.path}#${link.hash}` : link.path}
+                onClick={(e) => go(e, link)}
+                aria-current={isCurrent(link) ? "page" : undefined}
+                className={cn(
+                  "link-draw group/nav flex items-center gap-1.5 py-1 font-meta text-meta uppercase transition-colors duration-200",
+                  isCurrent(link) ? "text-brand" : "text-ink-muted hover:text-ink",
+                )}
+              >
+                <span className="text-ink-faint tnum opacity-60">{String(i + 1).padStart(2, "0")}</span>
+                {link.name}
+              </a>
+            ))}
+          </nav>
 
-      {/* Mobile Menu Button */}
-      <div className="flex items-center gap-3 md:hidden">
-        <svg
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="h-8 w-8 cursor-pointer"
-          style={{ color: iconColor }}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <line x1="4" y1="6" x2="20" y2="6" />
-          <line x1="4" y1="12" x2="20" y2="12" />
-          <line x1="4" y1="18" x2="20" y2="18" />
-        </svg>
-      </div>
+          <div className="hidden md:block">
+            <Button href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" variant="brand" size="sm" icon={MessageCircle}>
+              Chat with us
+            </Button>
+          </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={`fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-700 transition-all duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <button
-          className="absolute top-8 right-4 text-[#0025cc]"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          <svg
-            className="h-8 w-8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
+          {/* Mobile trigger — 44px target, morphs to an X while open */}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="relative z-modal -mr-2 flex h-11 w-11 cursor-pointer items-center justify-center md:hidden"
           >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-        {navLinks.map((link, i) => (
-          <a
-            key={i}
-            href={link.id ? `/#${link.id}` : link.path}
-            onClick={(e) => handleNavClick(e, link)}
+            <span className="relative block h-3 w-6">
+              {[0, 1].map((i) => (
+                <span
+                  key={i}
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute left-0 block h-px w-full bg-ink transition-all duration-300 ease-editorial motion-reduce:transition-none",
+                    i === 0
+                      ? open
+                        ? "top-1.5 rotate-45"
+                        : "top-0"
+                      : open
+                        ? "top-1.5 -rotate-45"
+                        : "top-3",
+                  )}
+                />
+              ))}
+            </span>
+          </button>
+        </div>
+
+        {/* Reading progress */}
+        <motion.div
+          aria-hidden="true"
+          style={{ scaleX: reduced ? 0 : progress }}
+          className="absolute inset-x-0 bottom-0 h-px origin-left bg-flame"
+        />
+      </header>
+
+      {/* Full-bleed overlay menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="mobile-menu"
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: reduced ? 0 : DURATION.base, ease: EASE }}
+            className="fixed inset-0 z-overlay flex flex-col bg-paper pt-[var(--nav-h)] md:hidden"
           >
-            {link.name}
-          </a>
-        ))}
-        <a
-          href="https://wa.me/9779867925779"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-[#25d366] text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:text-black"
-          style={{
-            boxShadow: "0 0 12px 3px rgba(37, 211, 102, 0.6)",
-            animation: "whatsappGlow 2s ease-in-out infinite",
-          }}
-        >
-          <FaWhatsapp size={18} />
-          Chat with us
-        </a>
-      </div>
-    </nav>
+            <nav aria-label="Mobile" className="flex flex-1 flex-col justify-center px-gutter">
+              {NAV_LINKS.map((link, i) => (
+                <motion.a
+                  key={link.name}
+                  href={link.hash ? `${link.path}#${link.hash}` : link.path}
+                  onClick={(e) => go(e, link)}
+                  initial={{ opacity: 0, y: reduced ? 0 : 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: DURATION.base, ease: EASE, delay: reduced ? 0 : 0.12 + i * 0.06 }}
+                  className="group/m flex items-baseline gap-5 border-b border-rule py-5"
+                >
+                  <Numeral value={i + 1} bare />
+                  <span className="font-display text-[2rem] font-extrabold uppercase leading-none tracking-tight text-ink transition-colors duration-200 group-hover/m:text-brand">
+                    {link.name}
+                  </span>
+                </motion.a>
+              ))}
+            </nav>
+
+            <div className="px-gutter pb-10">
+              <Button
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="brand"
+                size="lg"
+                icon={MessageCircle}
+                className="w-full"
+              >
+                Chat with us
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
-};
-
-export default Navbar;
+}

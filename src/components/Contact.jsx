@@ -1,285 +1,175 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import emailjs from "@emailjs/browser";
+import { MapPin, Mail, Phone, Clock } from "lucide-react";
+import Section from "./molecules/Section";
+import SectionHeader from "./molecules/SectionHeader";
+import ContactDetail from "./molecules/ContactDetail";
+import Modal from "./molecules/Modal";
+import Field from "./atoms/Field";
+import Button from "./atoms/Button";
+import Label from "./atoms/Label";
+import Reveal from "./atoms/Reveal";
+import { ADDRESS, EMAIL, EMAILJS, PHONE, PHONE_HREF } from "../lib/site";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function Contact() {
-  const formRef = useRef(null);
-  const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [result, setResult] = useState(null); // null | "success" | "error"
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("sending");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({ mode: "onBlur" });
 
+  const onSubmit = async (values) => {
     try {
-      await emailjs.sendForm(
-        "service_hcvt4xm",
-        "template_h6z1gfh",
-        formRef.current,
-        "3kvtsH07BHQuOL3od",
+      await emailjs.send(
+        EMAILJS.serviceId,
+        EMAILJS.contactTemplate,
+        { ...values, time: new Date().toLocaleString() },
+        EMAILJS.publicKey,
       );
-      setStatus("success");
-      formRef.current.reset();
+      setResult("success");
+      reset();
     } catch (error) {
       console.error("Error sending email:", error);
-      setStatus("error");
+      setResult("error");
     }
-  };
-
-  const closePopup = () => setStatus("idle");
-
-  const handleTryAgain = () => {
-    setStatus("idle");
-    formRef.current?.requestSubmit();
   };
 
   return (
     <>
-   
-      <section
-        className="py-16 px-4 border-t border-neutral-300 scroll-mt-[8vh]"
-        id="contact"
-      >
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <p className="text-lg text-[#0025cc] font-medium pb-2">
-              Contact Us
+      <Section id="contact" ground="paper">
+        <SectionHeader
+          index={4}
+          eyebrow="Contact"
+          lines={[<>Tell us what</>, <>you're trying</>, <>to move</>]}
+          standfirst="A project in mind, or just want to compare notes? Send it over — a real person reads every message and replies within one business day."
+        />
+
+        <div className="mt-16 grid gap-14 lg:grid-cols-[1fr_1.25fr] lg:gap-20">
+          {/* ── Studio details ─────────────────────────────────────── */}
+          <Reveal>
+            <Label rule className="mb-8">
+              The studio
+            </Label>
+            <p className="mb-9 max-w-measure text-[0.9rem] leading-relaxed text-ink-muted">
+              We help businesses grow their digital presence through smart strategy, considered
+              design and technology that holds up. From first-round startups to established brands.
             </p>
-            <h1 className="text-4xl font-semibold text-slate-700 pb-4">
-              Get in touch with us
-            </h1>
-            <p className="text-sm text-gray-500">
-              Have a project in mind or just want to say hello?
-              <br />
-              We'd love to hear from you — drop us a message below.
-            </p>
-          </div>
 
-          {/* Two Column Layout */}
-          <div className="flex flex-col lg:flex-row gap-12">
-            {/* Left — Company Info */}
-            <div className="lg:w-2/5 space-y-8">
-              <div>
-                <h2 className="text-2xl font-semibold text-slate-700 mb-3">
-                  Webfluence Consultants
-                </h2>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  We help businesses grow their digital presence through smart
-                  strategy, stunning design, and powerful technology. From
-                  startups to enterprises, we deliver solutions that drive
-                  clicks, conversions, and growth.
-                </p>
-              </div>
-
-              <div className="space-y-5">
-                {/* Address */}
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0 w-10 h-10 bg-[#0025cc]/10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#0025cc]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-700">Our Office</p>
-                    <p className="text-sm text-[#0025cc]">
-                      12, Tamnagar, Butwal
-                      <br />
-                      Rupandehi, NP 32600
-                    </p>
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0 w-10 h-10 bg-[#0025cc]/10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#0025cc]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-700">Email Us</p>
-                    <a href="mailto:hello@webfluence.com" className="text-sm text-[#0025cc] hover:underline">
-                      hello@webfluence.com
-                    </a>
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0 w-10 h-10 bg-[#0025cc]/10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#0025cc]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-700">Call Us</p>
-                    <a href="tel:+9779867925779" className="text-sm text-[#0025cc] hover:underline">
-                      +977 986 792 5779
-                    </a>
-                  </div>
-                </div>
-
-                {/* Hours */}
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0 w-10 h-10 bg-[#0025cc]/10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#0025cc]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" strokeLinecap="round" strokeLinejoin="round" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-700">Business Hours</p>
-                    <p className="text-sm text-[#0025cc]">
-                      Mon – Fri: 9am – 6pm
-                      <br />
-                      Sat: 10am – 2pm
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="space-y-6">
+              <ContactDetail icon={MapPin} label="Office" value={ADDRESS.join(", ")} />
+              <ContactDetail icon={Mail} label="Email" value={EMAIL} href={`mailto:${EMAIL}`} />
+              <ContactDetail icon={Phone} label="Telephone" value={PHONE} href={PHONE_HREF} />
+              <ContactDetail icon={Clock} label="Hours" value="Sun–Fri, 10:00 – 18:00 NPT" />
             </div>
+          </Reveal>
 
-            {/* Divider */}
-            <div className="hidden lg:block w-px bg-neutral-200 self-stretch" />
+          {/* ── Brief form ─────────────────────────────────────────── */}
+          <Reveal index={1}>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
+              <Label rule>Send a brief</Label>
 
-            {/* Right — Form */}
-            <form
-              ref={formRef}
-              onSubmit={handleSubmit}
-              className="lg:w-3/5 flex flex-col gap-6 text-sm"
-            >
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full">
-                  <label className="text-black/70" htmlFor="name">Your Name</label>
-                  <input
-                    id="name"
-                    name="from_name"
-                    className="h-12 p-2 mt-2 w-full border border-gray-500/30 rounded outline-none focus:border-[#0025cc] transition-colors"
-                    type="text"
-                    required
-                  />
-                </div>
-                <div className="w-full">
-                  <label className="text-black/70" htmlFor="email">Your Email</label>
-                  <input
-                    id="email"
-                    name="from_email"
-                    className="h-12 p-2 mt-2 w-full border border-gray-500/30 rounded outline-none focus:border-[#0025cc] transition-colors"
-                    type="email"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-black/70" htmlFor="subject">Subject</label>
-                <input
-                  id="subject"
-                  name="subject"
-                  className="h-12 p-2 mt-2 w-full border border-gray-500/30 rounded outline-none focus:border-[#0025cc] transition-colors"
-                  type="text"
+              <div className="grid gap-8 sm:grid-cols-2">
+                <Field
+                  label="Your name"
+                  name="from_name"
                   required
+                  autoComplete="name"
+                  placeholder="Jane Sharma"
+                  error={errors.from_name?.message}
+                  {...register("from_name", {
+                    required: "Please tell us your name",
+                    minLength: { value: 2, message: "That looks a little short" },
+                  })}
+                />
+                <Field
+                  label="Your email"
+                  name="from_email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="jane@company.com"
+                  error={errors.from_email?.message}
+                  {...register("from_email", {
+                    required: "We need an address to reply to",
+                    pattern: { value: EMAIL_RE, message: "Check this email address" },
+                  })}
                 />
               </div>
 
-              <div>
-                <label className="text-black/70" htmlFor="message">Message</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  className="w-full mt-2 p-2 h-44 border border-gray-500/30 rounded resize-none outline-none focus:border-[#0025cc] transition-colors"
-                  required
-                />
-              </div>
-
-              <input
-                type="hidden"
-                name="time"
-                value={new Date().toLocaleString()}
+              <Field
+                label="Subject"
+                name="subject"
+                required
+                placeholder="SEO for a new ecommerce brand"
+                error={errors.subject?.message}
+                {...register("subject", { required: "A one-line subject helps us route this" })}
               />
 
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="self-start bg-gradient-to-r from-[#0025cc] to-[#8A7DFF] hover:-translate-y-0.5 text-white h-12 px-10 rounded active:scale-95 transition hover:bg-[#0025cc]/90 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {status === "sending" ? "Sending..." : "Send Message"}
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+              <Field
+                as="textarea"
+                label="Message"
+                name="message"
+                required
+                rows={6}
+                placeholder="What are you trying to achieve, and by when?"
+                hint="The more context you give, the more useful our first reply will be."
+                error={errors.message?.message}
+                {...register("message", {
+                  required: "Tell us a little about the project",
+                  minLength: { value: 20, message: "A sentence or two, at least" },
+                })}
+              />
 
-      {/* Popup — outside section so it overlays the whole page */}
-      {(status === "success" || status === "error") && (
-        <div
-          className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 p-4"
-          onClick={closePopup}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`flex flex-col items-center w-96 bg-white text-center p-6 rounded-lg border text-sm ${
-              status === "success" ? "border-gray-500/30" : "border-red-200"
-            }`}
-          >
-            {status === "success" ? (
-              <>
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-3">
-                  <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h2 className="text-gray-800 text-xl font-medium pb-2">
-                  Message Sent!
-                </h2>
-                <p className="text-gray-500 w-11/12">
-                  Thanks for reaching out. We'll get back to you at our earliest convenience.
-                </p>
-                <button
-                  type="button"
-                  onClick={closePopup}
-                  className="mt-6 bg-[#0025cc] px-8 py-2 rounded text-white font-medium active:scale-95 transition hover:bg-[#0025cc]/90"
-                >
-                  Done
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mb-3">
-                  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                  </svg>
-                </div>
-                <h2 className="text-gray-800 text-xl font-medium pb-2">
-                  Something went wrong
-                </h2>
-                <p className="text-gray-500 w-11/12">
-                  We couldn't send your message. Please try again or email us directly at{" "}
-                  <a href="mailto:hello@webfluence.com" className="text-[#0025cc] hover:underline">
-                    hello@webfluence.com
-                  </a>
-                </p>
-                <div className="flex gap-3 mt-6">
-                  <button
-                    type="button"
-                    onClick={closePopup}
-                    className="px-6 py-2 rounded border border-gray-500/30 text-gray-600 font-medium active:scale-95 transition hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleTryAgain}
-                    className="px-6 py-2 rounded bg-red-500 text-white font-medium active:scale-95 transition hover:bg-red-600"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+              <Button type="submit" as="button" variant="solid" size="lg" loading={isSubmitting} arrow={!isSubmitting} className="self-start">
+                {isSubmitting ? "Sending" : "Send message"}
+              </Button>
+            </form>
+          </Reveal>
         </div>
-      )}
+      </Section>
+
+      <Modal
+        open={result === "success"}
+        onClose={() => setResult(null)}
+        tone="success"
+        title="Message sent"
+        footer={
+          <Button onClick={() => setResult(null)} variant="solid" size="md">
+            Done
+          </Button>
+        }
+      >
+        Thanks for reaching out — we'll come back to you within one business day.
+      </Modal>
+
+      <Modal
+        open={result === "error"}
+        onClose={() => setResult(null)}
+        tone="error"
+        title="That didn't send"
+        footer={
+          <>
+            <Button onClick={() => setResult(null)} variant="outline" size="md">
+              Close
+            </Button>
+            <Button href={`mailto:${EMAIL}`} variant="solid" size="md">
+              Email us instead
+            </Button>
+          </>
+        }
+      >
+        We couldn't reach the mail service. Please try again, or write to{" "}
+        <a href={`mailto:${EMAIL}`} className="link-draw text-brand">
+          {EMAIL}
+        </a>
+        .
+      </Modal>
     </>
   );
 }

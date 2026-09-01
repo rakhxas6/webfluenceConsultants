@@ -1,104 +1,99 @@
 import React from "react";
-// import { Helmet } from "react-helmet-async";
+import Section from "./molecules/Section";
+import SectionHeader from "./molecules/SectionHeader";
+import Reveal from "./atoms/Reveal";
+import Button from "./atoms/Button";
+import Label from "./atoms/Label";
+import Numeral from "./atoms/Numeral";
+
+const PRINCIPLES = [
+  {
+    title: "Start with the problem",
+    body: "Before a single asset is designed we agree on the commercial problem worth solving, and the number that proves we solved it.",
+  },
+  {
+    title: "Build the engine, not the campaign",
+    body: "Campaigns end. Systems compound. We build search, social and site infrastructure that keeps returning long after the launch.",
+  },
+  {
+    title: "Report in plain language",
+    body: "Monthly reads you can forward to your board without translation. Reach and ROAS, with commentary — never a dashboard screenshot.",
+  },
+];
 
 export default function About() {
   return (
-    <>
-      {/* <Helmet>
-        <title>About Us | Webfluence Consultants - Digital Marketing Agency in Nepal</title>
-        <meta
-          name="description"
-          content="Webfluence Consultants is a Nepal-based digital marketing agency that builds digital experiences that convert — from brand identity and SEO to paid ads and social media."
-        />
-        <meta
-          name="keywords"
-          content="about Webfluence Consultants, digital marketing agency Nepal, SEO agency Nepal, social media marketing, branding agency, growth partner Nepal"
-        />
-        <link rel="canonical" href="https://webfluence-consultants.vercel.app/#about" />
-
-        {/* Open Graph */}
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content="About Us | Webfluence Consultants" />
-      <meta
-        property="og:description"
-        content="We don't just build websites — we build digital experiences that convert. Webfluence Consultants is Nepal's growth partner for SEO, social media, branding, and beyond."
+    <Section id="about" ground="paper">
+      <SectionHeader
+        index={2}
+        eyebrow="The studio"
+        lines={[<>We build digital</>, <>experiences that</>, <>actually convert</>]}
+        standfirst="Webfluence Consultants turns bold ideas into strategies that dominate search, social and beyond. Whether you're a startup ready to make noise or an established brand hungry for more, we're the growth partner your business has been waiting for."
+        action={
+          <Button href="#contact" variant="solid" size="md" arrow className="self-start">
+            Work with us
+          </Button>
+        }
       />
-      <meta
-        property="og:url"
-        content="https://webfluence-consultants.vercel.app/#about"
-      />
-      <meta property="og:site_name" content="Webfluence Consultants" />
 
-      {/* Twitter 
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="About Us | Webfluence Consultants" />
-        <meta
-          name="twitter:description"
-          content="We don't just build websites — we build digital experiences that convert. Nepal's growth partner for SEO, social, branding, and beyond."
-        />
-      </Helmet> */}
-
-      <section
-        className="py-16 px-4 border-t border-neutral-300 scroll-mt-[30vh]"
-        id="about"
-      >
-        <section className="flex flex-col md:flex-row items-center justify-center gap-10 max-md:px-4">
-          <div className="relative shadow-2xl shadow-[#0025cc]/40 rounded-2xl overflow-hidden shrink-0">
+      <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
+        {/* Portrait plate */}
+        <Reveal className="relative self-start">
+          <div className="relative border border-ink">
             <img
-              className="max-w-md w-full object-cover rounded-2xl"
-              src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?q=80&w=451&h=451&auto=format&fit=crop"
-              alt="Webfluence Consultants team"
+              src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?q=80&w=900&auto=format&fit=crop"
+              alt="The Webfluence Consultants team at work in the Butwal studio"
+              loading="lazy"
+              decoding="async"
+              width="900"
+              height="900"
+              className="aspect-square w-full object-cover grayscale transition-[filter] duration-700 ease-editorial hover:grayscale-0"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-brand/10 mix-blend-multiply"
             />
           </div>
-
-          <div className="text-sm text-slate-600 max-w-lg">
-            <h1 className="text-xl uppercase font-semibold text-slate-700">
-              What we do?
-            </h1>
-            <div className="w-24 h-[3px] rounded-full bg-gradient-to-r from-[#0025cc] to-[#DDD9FF]"></div>
-            <p className="mt-8">
-              We don't just build websites — we build{" "}
-              <span className="text-[#0025cc] font-semibold">
-                digital experiences that convert.
-              </span>{" "}
-              Webfluence Consultants turns your boldest ideas into strategies
-              that dominate search, social, and beyond.
-            </p>
-            <p className="mt-4">
-              Whether you're a startup ready to make noise or an established
-              brand hungry for more — we craft campaigns that{" "}
-              <span className="text-[#0025cc] font-semibold">
-                stop the scroll, spark curiosity, and drive real revenue.
-              </span>
-            </p>
-            <p className="mt-4">
-              From brand identity to paid ads, SEO to social media — we're the
-              growth partner your business has been waiting for.{" "}
-              <span className="text-[#0025cc] font-semibold">
-                Let's make your brand impossible to ignore.
-              </span>
-            </p>
-            <a
-              href="#contact"
-              className="flex items-center w-max gap-2 mt-8 hover:-translate-y-0.5 transition bg-gradient-to-r from-[#0025cc] to-[#8A7DFF] py-3 px-8 rounded text-white"
-            >
-              <span>Read more</span>
-              <svg
-                width="13"
-                height="12"
-                viewBox="0 0 13 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.53 6.53a.75.75 0 0 0 0-1.06L7.757.697a.75.75 0 1 0-1.06 1.06L10.939 6l-4.242 4.243a.75.75 0 0 0 1.06 1.06zM0 6v.75h12v-1.5H0z"
-                  fill="#fff"
-                />
-              </svg>
-            </a>
+          <div className="mt-4 flex items-center justify-between">
+            <Label>Fig. 02 — The studio, Butwal</Label>
+            <Label tone="flame">NP</Label>
           </div>
-        </section>
-      </section>
-    </>
+        </Reveal>
+
+        {/* Principles */}
+        <div>
+          <Reveal className="mb-8">
+            <Label rule>How we work</Label>
+          </Reveal>
+
+          <ol className="border-t border-rule">
+            {PRINCIPLES.map((principle, i) => (
+              <Reveal
+                as="li"
+                key={principle.title}
+                index={i}
+                className="group/p flex gap-5 border-b border-rule py-7 sm:gap-8"
+              >
+                <Numeral value={i + 1} className="mt-1.5 shrink-0" />
+                <div className="min-w-0">
+                  <h3 className="font-display text-[1.15rem] font-bold uppercase leading-snug tracking-tight text-ink transition-colors duration-300 group-hover/p:text-brand">
+                    {principle.title}
+                  </h3>
+                  <p className="mt-2.5 max-w-measure text-[0.9rem] leading-relaxed text-ink-muted">
+                    {principle.body}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+
+          <Reveal index={3} className="mt-10 border-l-2 border-flame pl-6">
+            <p className="font-serif text-[clamp(1.35rem,2.6vw,1.9rem)] italic leading-tight text-ink">
+              “From brand identity to paid ads — let's make your brand impossible to ignore.”
+            </p>
+          </Reveal>
+        </div>
+      </div>
+    </Section>
   );
 }

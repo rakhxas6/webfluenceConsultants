@@ -1,320 +1,252 @@
-import React, { useRef, useState } from "react";
-import logoFull from "../assets/wfclogo1.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useCallback, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
+import { ArrowUpRight } from "lucide-react";
+import Container from "./atoms/Container";
+import Button from "./atoms/Button";
+import Label from "./atoms/Label";
+import Reveal from "./atoms/Reveal";
+import Spinner from "./atoms/Spinner";
+import logoFull from "../assets/wfclogo1.png";
+import { cn } from "../lib/cn";
+import { scrollTo } from "../lib/useSmoothScroll";
+import { ADDRESS, EMAIL, EMAILJS, NAV_LINKS, PHONE, PHONE_HREF, SOCIALS } from "../lib/site";
 
-const Footer = () => {
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const LEGAL = [
+  { label: "Privacy policy", path: "/privacy-policy" },
+  { label: "Terms & conditions", path: "/terms-and-conditions" },
+];
+
+/** Closing colophon. Sits on ink so it reads as one dark block with the CTA above it. */
+export default function Footer() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const formRef = useRef(null);
-  const [status, setStatus] = useState("idle"); // "idle" | "sending" | "success" | "error"
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState("idle"); // idle | sending | done | error
+  const [error, setError] = useState("");
 
-  const closePopup = () => setStatus("idle");
+  const go = useCallback(
+    (e, link) => {
+      e.preventDefault();
+      if (!link.hash) {
+        navigate(link.path);
+        scrollTo(0, { immediate: true });
+        return;
+      }
+      const jump = () => {
+        const el = document.getElementById(link.hash);
+        if (el) scrollTo(el);
+      };
+      if (location.pathname === link.path) jump();
+      else {
+        navigate(link.path);
+        requestAnimationFrame(() => setTimeout(jump, 120));
+      }
+    },
+    [navigate, location.pathname],
+  );
 
-  const handleTryAgain = () => {
-    setStatus("idle");
-    handleSubscribe();
-  };
-
-  const handleNavClick = (e, id) => {
+  const subscribe = async (e) => {
     e.preventDefault();
-
-    if (location.pathname === "/") {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    } else {
-      navigate("/");
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+    if (!EMAIL_RE.test(email)) {
+      setError("Enter a valid email address");
+      setState("error");
+      return;
     }
-  };
-
-  const handleSubscribe = async () => {
-    const email = formRef.current?.querySelector("input").value;
-    if (!email) return;
-
-    setStatus("sending");
-
+    setError("");
+    setState("sending");
     try {
       await emailjs.send(
-        "service_hcvt4xm",
-        "template_8v6fnrs", // separate template from contact form
-        {
-          to_email: email,
-          time: new Date().toLocaleString(),
-        },
-        "3kvtsH07BHQuOL3od",
+        EMAILJS.serviceId,
+        EMAILJS.subscribeTemplate,
+        { to_email: email, time: new Date().toLocaleString() },
+        EMAILJS.publicKey,
       );
-      setStatus("success");
-      formRef.current.querySelector("input").value = "";
+      setEmail("");
+      setState("done");
     } catch (err) {
       console.error(err);
-      setStatus("error");
-    } finally {
-      setTimeout(() => setStatus("idle"), 4000);
+      setError("Couldn't subscribe just now — try again shortly");
+      setState("error");
     }
   };
 
-  const importantLinks = [
-    { label: "Home", path: "/", id: null },
-    { label: "About", path: "/", id: "about" },
-    { label: "Work", path: "/work", id: null },
-    { label: "Contact", path: "/", id: "contact" },
-  ];
-
-  const socialLinks = [
-    {
-      label: "Facebook",
-      href: "https://www.facebook.com/profile.php?id=61585824181750",
-    },
-    {
-      label: "Instagram",
-      href: "https://www.instagram.com/webfluenceconsultants/",
-    },
-    {
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/company/webfluence-consultants",
-    },
-  ];
-
   return (
-    <>
-      <footer className="bg-[#0025cc]/90 py-10 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="flex flex-wrap justify-between gap-y-12 lg:gap-x-8">
-            {/* Brand */}
-            <div className="w-full md:w-[45%] lg:w-[35%] flex flex-col items-center md:items-start text-center md:text-left">
-              <a href="/">
-                <img
-                  src={logoFull}
-                  alt="Webfluence Consultants"
-                  className="w-72 h-auto object-contain"
+    <footer className="paper-grain relative overflow-hidden border-t border-paper/10 bg-ink text-paper">
+      <Container className="relative pt-band">
+        <div className="grid gap-14 lg:grid-cols-[1.3fr_1fr_1fr] lg:gap-16">
+          {/* ── Identity + list ────────────────────────────────────── */}
+          <Reveal>
+            <a href="/" onClick={(e) => go(e, { path: "/" })} className="inline-block">
+              <img
+                src={logoFull}
+                alt="Webfluence Consultants"
+                width="260"
+                height="70"
+                className="h-auto w-56 object-contain"
+              />
+            </a>
+            <p className="mt-7 max-w-measure text-[0.9rem] leading-relaxed text-paper/55">
+              We turn bold ideas into unstoppable brands — a growth partner built to make your
+              business scale and leave competitors behind.
+            </p>
+
+            <form onSubmit={subscribe} noValidate className="mt-10 max-w-sm">
+              <label htmlFor="footer-email" className="font-meta text-meta uppercase text-paper/50">
+                Field notes — monthly, no filler
+              </label>
+              <div className="mt-3 flex items-center gap-3 border-b border-paper/25 pb-2 transition-colors duration-200 focus-within:border-flame">
+                <input
+                  id="footer-email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (state === "error") setState("idle");
+                  }}
+                  placeholder="you@company.com"
+                  aria-invalid={state === "error" ? "true" : undefined}
+                  aria-describedby="footer-email-status"
+                  className="min-w-0 flex-1 border-0 bg-transparent text-[0.9rem] text-paper placeholder:text-paper/35 focus:outline-none focus:ring-0"
                 />
-              </a>
-              <div className="w-full max-w-52 h-px mt-8 bg-gradient-to-r from-white via-white/10 to-white" />
-              <p className="text-sm text-white/60 mt-6 max-w-sm leading-relaxed">
-                We turn bold ideas into unstoppable brands. Webfluence
-                Consultants is your growth partner — built to make your business
-                dominate, scale, and leave competitors behind.
-              </p>
-            </div>
-
-            {/* Important Links */}
-            <div className="w-full md:w-[45%] lg:w-[15%] flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="text-sm text-white font-medium">
-                Important Links
-              </h3>
-              <div className="flex flex-col gap-2 mt-6">
-                {importantLinks.map((link, i) =>
-                  link.id ? (
-                    <a
-                      key={i}
-                      href={`/#${link.id}`}
-                      onClick={(e) => handleNavClick(e, link.id)}
-                      className="text-sm text-white/60 hover:text-white transition-colors"
-                    >
-                      {link.label}
-                    </a>
+                <button
+                  type="submit"
+                  disabled={state === "sending"}
+                  className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center text-paper/60 transition-colors duration-200 hover:text-flame disabled:cursor-not-allowed disabled:opacity-50"
+                  aria-label="Subscribe to Field Notes"
+                >
+                  {state === "sending" ? (
+                    <Spinner />
                   ) : (
-                    <a
-                      key={i}
-                      href={link.path}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigate(link.path);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      className="text-sm text-white/60 hover:text-white transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ),
-                )}
+                    <ArrowUpRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  )}
+                </button>
               </div>
-            </div>
+              <p
+                id="footer-email-status"
+                role="status"
+                className={cn(
+                  "mt-3 min-h-[1rem] font-meta text-meta uppercase",
+                  state === "error" ? "text-flame" : "text-paper/45",
+                )}
+              >
+                {state === "done" && "Subscribed — welcome aboard"}
+                {state === "error" && error}
+              </p>
+            </form>
+          </Reveal>
 
-            {/* Social Links */}
-            <div className="w-full md:w-[45%] lg:w-[15%] flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="text-sm text-white font-medium">Social Links</h3>
-              <div className="flex flex-col gap-2 mt-6">
-                {socialLinks.map((link, i) => (
+          {/* ── Navigation ─────────────────────────────────────────── */}
+          <Reveal index={1}>
+            <Label tone="invert" rule className="mb-7">
+              Index
+            </Label>
+            <ul className="space-y-3.5">
+              {NAV_LINKS.map((link) => (
+                <li key={link.name}>
                   <a
-                    key={i}
-                    href={link.href}
+                    href={link.hash ? `${link.path}#${link.hash}` : link.path}
+                    onClick={(e) => go(e, link)}
+                    className="link-draw text-[0.9rem] text-paper/60 transition-colors duration-200 hover:text-paper"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <Label tone="invert" rule className="mb-7 mt-12">
+              Elsewhere
+            </Label>
+            <ul className="space-y-3.5">
+              {SOCIALS.map((social) => (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-white/60 hover:text-white transition-colors"
+                    className="link-draw inline-flex items-center gap-1.5 text-[0.9rem] text-paper/60 transition-colors duration-200 hover:text-paper"
                   >
-                    {link.label}
+                    {social.label}
+                    <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
                   </a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          {/* ── Contact ────────────────────────────────────────────── */}
+          <Reveal index={2}>
+            <Label tone="invert" rule className="mb-7">
+              Studio
+            </Label>
+            <address className="space-y-6 not-italic">
+              <p className="text-[0.9rem] leading-relaxed text-paper/60">
+                {ADDRESS.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
                 ))}
-              </div>
-            </div>
-
-            {/* Newsletter */}
-            <div className="w-full md:w-[45%] lg:w-[25%] flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="text-sm text-white font-medium">
-                Subscribe for news
-              </h3>
-              <div
-                ref={formRef}
-                className="flex items-center border gap-2 border-white/20 max-w-80 w-full rounded-full overflow-hidden mt-4"
-              >
-                <input
-                  type="email"
-                  placeholder="Enter your email.."
-                  className="w-full h-full pl-6 outline-none text-sm bg-transparent text-white placeholder-white/60 placeholder:text-xs"
-                  required
-                  disabled={status === "sending"}
-                />
-                <button
-                  type="button"
-                  onClick={handleSubscribe}
-                  disabled={status === "sending"}
-                  className="bg-white text-black hover:bg-[#ff751f] hover:text-white active:scale-95 transition-all duration-300 w-auto px-6 flex-shrink-0 h-10 rounded-full text-sm cursor-pointer disabled:opacity-60"
+              </p>
+              <p>
+                <a
+                  href={`mailto:${EMAIL}`}
+                  className="link-draw block text-[0.9rem] text-paper/60 transition-colors duration-200 hover:text-paper"
                 >
-                  {status === "sending" ? "Subscribing..." : "Subscribe"}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full h-px mt-12 mb-4 bg-gradient-to-r from-white via-black/25 to-white" />
-
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white/60">
-              © {new Date().getFullYear()} Webfluence Consultants. All rights
-              reserved.
-            </p>
-            <div className="flex items-center gap-6">
-              <a
-                href="/terms-and-conditions"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/terms-and-conditions");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="text-xs text-white/60 hover:text-white transition-colors"
-              >
-                Terms & Conditions
-              </a>
-              <div className="w-px h-4 bg-white/20" />
-              <a
-                href="/privacy-policy"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/privacy-policy");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="text-xs text-white/60 hover:text-white transition-colors"
-              >
-                Privacy Policy
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* Popup — outside footer so fixed positioning overlays the full page */}
-      {(status === "success" || status === "error") && (
-        <div
-          className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 p-4"
-          onClick={closePopup}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`flex flex-col items-center w-96 bg-white text-center p-6 rounded-lg border text-sm ${
-              status === "success" ? "border-gray-500/30" : "border-red-200"
-            }`}
-          >
-            {status === "success" ? (
-              <>
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-3">
-                  <svg
-                    className="w-5 h-5 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-gray-800 text-xl font-medium pb-2">
-                  You're subscribed!
-                </h2>
-                <p className="text-gray-500 w-11/12">
-                  Welcome aboard! Check your inbox for a confirmation. We'll
-                  keep you updated with the latest news and insights.
-                </p>
-                <button
-                  type="button"
-                  onClick={closePopup}
-                  className="mt-6 bg-[#0025cc] px-8 py-2 rounded text-white font-medium active:scale-95 transition hover:bg-[#0025cc]/90"
+                  {EMAIL}
+                </a>
+                <a
+                  href={PHONE_HREF}
+                  className="link-draw mt-2 block text-[0.9rem] text-paper/60 transition-colors duration-200 hover:text-paper"
                 >
-                  Done
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mb-3">
-                  <svg
-                    className="w-5 h-5 text-red-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-gray-800 text-xl font-medium pb-2">
-                  Something went wrong
-                </h2>
-                <p className="text-gray-500 w-11/12">
-                  We couldn't process your subscription. Please try again or
-                  reach us at{" "}
-                  <a
-                    href="mailto:hello@webfluence.com"
-                    className="text-[#0025cc] hover:underline"
-                  >
-                    hello@webfluence.com
-                  </a>
-                </p>
-                <div className="flex gap-3 mt-6">
-                  <button
-                    type="button"
-                    onClick={closePopup}
-                    className="px-6 py-2 rounded border border-gray-500/30 text-gray-600 font-medium active:scale-95 transition hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleTryAgain}
-                    className="px-6 py-2 rounded bg-red-500 text-white font-medium active:scale-95 transition hover:bg-red-600"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+                  {PHONE}
+                </a>
+              </p>
+            </address>
+
+            <Button
+              onClick={() => scrollTo(0)}
+              variant="invert"
+              size="sm"
+              className="mt-10 border-paper/25"
+            >
+              Back to top
+            </Button>
+          </Reveal>
         </div>
-      )}
-    </>
+
+        {/* ── Legal strip ────────────────────────────────────────────── */}
+        <div className="mt-16 flex flex-col gap-5 border-t border-paper/12 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-meta text-meta uppercase text-paper/40">
+            © {new Date().getFullYear()} Webfluence Consultants — All rights reserved
+          </p>
+          <ul className="flex flex-wrap gap-x-7 gap-y-2">
+            {LEGAL.map((item) => (
+              <li key={item.path}>
+                <a
+                  href={item.path}
+                  onClick={(e) => go(e, item)}
+                  className="link-draw font-meta text-meta uppercase text-paper/40 transition-colors duration-200 hover:text-paper"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Container>
+
+      {/* ── Oversized wordmark, cropped by the page edge ─────────────── */}
+      <div aria-hidden="true" className="select-none overflow-hidden">
+        <p className="-mb-[0.2em] whitespace-nowrap px-gutter text-center font-display text-[clamp(2.25rem,12.2vw,12.5rem)] font-black uppercase leading-[0.8] tracking-[-0.045em] text-paper/[0.07]">
+          Webfluence
+        </p>
+      </div>
+    </footer>
   );
-};
-
-export default Footer;
+}

@@ -1,61 +1,70 @@
-import "./App.css";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import "./App.css";
 
-// components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import BackToTop from "./components/Top";
+import ScrollToTop from "./components/ScrollToTop";
+
 import Home from "./components/Home";
-import Testimonials from "./components/Testimonials";
-import Contact from "./components/Contact";
-import Brands from "./components/Brands";
-import About from "./components/About";
 import Services from "./components/Services";
+import Stats from "./components/Stats";
+import About from "./components/About";
+import Testimonials from "./components/Testimonials";
+import Brands from "./components/Brands";
 import FAQs from "./components/FAQs";
+import Contact from "./components/Contact";
+import CTA from "./components/CTA";
+import Work from "./components/Works";
+import ServiceDetail from "./components/services/ServiceDetail";
 import PrivacyPolicy from "./components/privacy";
 import TermsAndConditions from "./components/t&c";
-import BackToTop from "./components/Top";
-import Work from "./components/Works";
-import Error from "./components/Error";
-import Stats from "./components/Stats";
-import CTA from "./components/CTA";
-import ServiceDetail from "./components/services/ServiceDetail";
+import ErrorPage from "./components/Error";
 
-const MainLayout = () => (
+import { useSmoothScroll } from "./lib/useSmoothScroll";
+
+/**
+ * Reading order for the home page: hook, capability, proof, character,
+ * objections, then the ask. The ink CTA and the ink footer sit back to back on
+ * purpose — they read as one closing block.
+ */
+const HomePage = () => (
   <>
     <Home />
     <Services />
-    <About />
     <Stats />
+    <About />
     <Testimonials />
     <Brands />
+    <FAQs />
     <Contact />
     <CTA />
-    <FAQs />
   </>
 );
 
-function App() {
+export default function App() {
+  useSmoothScroll();
+
   return (
     <HelmetProvider>
       <Router>
+        <ScrollToTop />
         <Navbar />
-        <Routes>
-          <Route path="/" element={<MainLayout />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/:serviceId" element={<ServiceDetail />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route
-            path="/terms-and-conditions"
-            element={<TermsAndConditions />}
-          />
-          <Route path="*" element={<Error />} />
-        </Routes>
+        <main id="main">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/:serviceId" element={<ServiceDetail />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </main>
         <Footer />
         <BackToTop />
       </Router>
     </HelmetProvider>
   );
 }
-
-export default App;

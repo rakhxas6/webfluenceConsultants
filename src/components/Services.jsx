@@ -1,58 +1,42 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Section from "./molecules/Section";
+import SectionHeader from "./molecules/SectionHeader";
+import ServiceCard from "./molecules/ServiceCard";
+import Button from "./atoms/Button";
 import servicesData from "./services/servicesData.json";
 import serviceIcons from "./services/Serviceicons";
-import { useNavigate } from "react-router-dom";
 
 export default function Services() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
-    <section
-      className="py-16 border-t border-neutral-200 scroll-mt-[10vh]"
-      style={{ width: "100%", boxSizing: "border-box", overflowX: "hidden" }}
-      id="services"
-    >
-      <div className="max-w-5xl mx-auto px-4">
-        {/* heading */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-semibold text-[#0025cc]">
-            Our Services
-          </h2>
-          <p className="text-sm text-gray-400 mt-2 max-w-sm mx-auto leading-relaxed">
-            Everything you need to grow your brand online — strategy, execution,
-            and results.
-          </p>
-        </div>
+    <Section id="services" ground="paper" rule={false}>
+      <SectionHeader
+        index={1}
+        eyebrow="What we do"
+        lines={[<>Six disciplines,</>, <>one growth engine</>]}
+        standfirst="Strategy, execution and measurement under one roof. Every engagement maps to revenue — not vanity metrics — and every discipline is run by people who do that thing full time."
+        action={
+          <Button href="#contact" variant="outline" size="md" arrow className="self-start">
+            Brief us
+          </Button>
+        }
+      />
 
-        {/* grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-[#ff751f]/50 -m-px">
-          {servicesData.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => navigate(`/${s.id}`)}
-              className="group bg-white px-8 py-10 flex flex-col gap-4 hover:bg-[#f7f8ff] transition-colors duration-200 cursor-pointer text-left  -m-px w-full"
-            >
-              {/* icon */}
-              <div className="flex justify-center text-white opacity-70 group-hover:opacity-100   transition-opacity duration-200">
-<span className="bg-[#0025cc] p-5 rounded-full transition-all duration-200 group-hover:[animation:wobble_0.5s_ease]">                  {serviceIcons[s.id]}
-                </span>
-              </div>
-              {/* title */}
-              <h3 className="text-center text-xl font-semibold text-slate-700 group-hover:text-[#0025cc] transition-colors duration-200">
-                {s.category}
-              </h3>
-              {/* description */}
-              <p className="text-sm text-gray-400 leading-relaxed text-center">
-                {s.description}
-              </p>
-              {/* learn more hint */}
-              <p className="text-xs text-[#0025cc] text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 font-medium tracking-wide mt-auto">
-                Learn more →
-              </p>
-            </button>
-          ))}
-        </div>
+      <div className="mt-14 grid grid-cols-1 border-b border-r border-rule sm:grid-cols-2 lg:grid-cols-3">
+        {servicesData.map((service, i) => (
+          <ServiceCard
+            key={service.id}
+            index={i + 1}
+            revealIndex={i % 3}
+            icon={serviceIcons[service.id]}
+            title={service.category}
+            description={service.description}
+            onSelect={() => navigate(`/${service.id}`)}
+          />
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
